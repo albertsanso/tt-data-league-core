@@ -102,6 +102,9 @@ public class SeasonPlayerResult {
         return competitionInfo.competitionGroup();
     }
 
+    public String getCompetitionGender() {
+        return competitionInfo.competitionGender();
+    }
     public CompetitionInfo getCompetitionInfo() {
         return competitionInfo;
     }

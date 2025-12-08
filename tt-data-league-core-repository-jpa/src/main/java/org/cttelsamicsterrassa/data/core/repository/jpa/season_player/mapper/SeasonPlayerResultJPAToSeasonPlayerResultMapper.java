@@ -28,7 +28,8 @@ public class SeasonPlayerResultJPAToSeasonPlayerResultMapper implements Function
                 seasonPlayerResultJPA.getCompetitionCategory(),
                 seasonPlayerResultJPA.getCompetitionScope(),
                 seasonPlayerResultJPA.getCompetitionScopeTag(),
-                seasonPlayerResultJPA.getCompetitionGroup()
+                seasonPlayerResultJPA.getCompetitionGroup(),
+                seasonPlayerResultJPA.getCompetitionGender()
         );
 
         MatchInfo matchInfo = new MatchInfo(
@@ -38,7 +39,6 @@ public class SeasonPlayerResultJPAToSeasonPlayerResultMapper implements Function
                 seasonPlayerResultJPA.getMatchGamePoints().stream().mapToInt(Integer::parseInt).toArray(),
                 seasonPlayerResultJPA.getMatchGamesWon(),
                 seasonPlayerResultJPA.getMatchLinkageId()
-
         );
 
         SeasonPlayer seasonPlayer = seasonPlayerJPAToSeasonPlayerMapper.apply(seasonPlayerResultJPA.getSeasonPlayer());

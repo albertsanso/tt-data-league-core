@@ -9,10 +9,13 @@ public interface SeasonPlayerResultRepository {
     Optional<SeasonPlayerResult> findById(UUID id);
     Optional<SeasonPlayerResult> findFor(
             String season,
-            String competition,
-            String jornada,
-            String group,
-            String playerLetter,
+            String competitionType,
+            String competitionCategory,
+            String competitionScope,
+            String competitionScopeTag,
+            String competitionGroup,
+            int matchDayNumber,
+            String matchPlayerLetter,
             String matchLinkageId,
             UUID clubId
     );

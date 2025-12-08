@@ -5,6 +5,7 @@ public record CompetitionInfo(
         String competitionCategory,
         String competitionScope,
         String competitionScopeTag,
-        String competitionGroup
+        String competitionGroup,
+        String competitionGender
 ) {
 }

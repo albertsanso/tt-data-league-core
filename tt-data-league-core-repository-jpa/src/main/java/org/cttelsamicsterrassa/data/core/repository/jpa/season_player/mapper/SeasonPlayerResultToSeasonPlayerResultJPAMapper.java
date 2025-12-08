@@ -29,6 +29,7 @@ public class SeasonPlayerResultToSeasonPlayerResultJPAMapper implements Function
         resultJpa.setCompetitionScope(seasonPlayerResult.getCompetitionScope());
         resultJpa.setCompetitionScopeTag(seasonPlayerResult.getCompetitionScopeTag());
         resultJpa.setCompetitionGroup(seasonPlayerResult.getCompetitionGroup());
+        resultJpa.setCompetitionGender(seasonPlayerResult.getCompetitionGender());
 
         resultJpa.setMatchDayNumber(seasonPlayerResult.getMatchInfo().matchDayNumber());
         resultJpa.setMatchDay(seasonPlayerResult.getMatchInfo().matchDay());

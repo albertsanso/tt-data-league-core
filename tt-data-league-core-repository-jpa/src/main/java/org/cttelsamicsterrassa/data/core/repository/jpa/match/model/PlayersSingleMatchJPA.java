@@ -1,9 +1,7 @@
-package org.cttelsamicsterrassa.data.core.repository.jpa.season_player.model;
+package org.cttelsamicsterrassa.data.core.repository.jpa.match.model;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
@@ -12,12 +10,11 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.cttelsamicsterrassa.data.core.repository.shared.StringListConverter;
+import org.cttelsamicsterrassa.data.core.repository.jpa.season_player.model.SeasonPlayerResultJPA;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -25,16 +22,30 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Entity
 @Table(
-        name="SeasonPlayerResult",
+        name="PlayersSingleMatch",
         indexes = {
-                @Index(name="idx_season_player_id", columnList = "season_player_id")
+                @Index(name="idx_player_result_abc_id", columnList="player_result_abc_id"),
+                @Index(name="idx_player_result_xyz_id", columnList="player_result_xyz_id"),
+                @Index(name="idx_unique_row_match_id", columnList="unique_row_match_id")
         }
 )
-public class SeasonPlayerResultJPA {
+public class PlayersSingleMatchJPA {
 
     @Id
     @Column(columnDefinition = "BINARY(16)", updatable = false, nullable = false)
     private UUID id;
+
+    @NotNull
+    @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "player_result_abc_id")
+    private SeasonPlayerResultJPA seasonPlayerResultAbc;
+
+    @NotNull
+    @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "player_result_xyz_id")
+    private SeasonPlayerResultJPA seasonPlayerResultXyz;
 
     @Column(name = "season", length = 9)
     private String season;
@@ -60,25 +71,7 @@ public class SeasonPlayerResultJPA {
     @Column(name ="match_day_number")
     private int matchDayNumber;
 
-    @Column(name = "match_day", length = 20)
-    private String matchDay;
+    @Column(name="unique_row_match_id", unique = false)
+    private String uniqueRowMatchId;
 
-    @Column(name = "match_player_letter")
-    private String matchPlayerLetter;
-
-    @Convert(converter = StringListConverter.class)
-    @Column(name = "match_game_points", length = 500)
-    private List<String> matchGamePoints;
-
-    @Column(name = "match_games_won")
-    private int matchGamesWon;
-
-    @Column(name = "match_linkage_id")
-    private String matchLinkageId;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "season_player_id")
-    private SeasonPlayerJPA seasonPlayer;
 }
