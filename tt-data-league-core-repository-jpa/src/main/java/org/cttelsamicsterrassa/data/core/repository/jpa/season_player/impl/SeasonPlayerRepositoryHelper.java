@@ -4,6 +4,7 @@ import org.cttelsamicsterrassa.data.core.repository.jpa.season_player.model.Seas
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,5 +20,9 @@ public interface SeasonPlayerRepositoryHelper extends JpaRepository<SeasonPlayer
             String practicionerName,
             String clubName,
             String yearRange
+    );
+
+    List<SeasonPlayerJPA> findByClubMember_Practicioner_FullNameContainingIgnoreCase(
+            String practicionerName
     );
 }

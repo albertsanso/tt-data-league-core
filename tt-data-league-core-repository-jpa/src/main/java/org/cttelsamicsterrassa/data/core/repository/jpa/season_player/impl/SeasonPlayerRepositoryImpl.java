@@ -9,6 +9,7 @@ import org.cttelsamicsterrassa.data.core.repository.jpa.season_player.mapper.Sea
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -42,6 +43,14 @@ public class SeasonPlayerRepositoryImpl implements SeasonPlayerRepository {
     public Optional<SeasonPlayer> findByPracticionerNameAndClubNameAndSeason(String practicionerName, String clubName, String season) {
         return seasonPlayerRepositoryHelper.findByClubMember_Practicioner_FullNameAndClubMember_Club_NameAndYearRange(practicionerName, clubName, season)
                 .map(seasonPlayerJPAToSeasonPlayerMapper);
+    }
+
+    @Override
+    public List<SeasonPlayer> findBySimilarName(String name) {
+        return seasonPlayerRepositoryHelper.findByClubMember_Practicioner_FullNameContainingIgnoreCase(name)
+                .stream()
+                .map(seasonPlayerJPAToSeasonPlayerMapper)
+                .toList();
     }
 
     public void save(SeasonPlayer seasonPlayer) {
