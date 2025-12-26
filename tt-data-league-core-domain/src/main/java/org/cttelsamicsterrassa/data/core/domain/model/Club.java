@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public class Club extends Entity {
     private final UUID id;
-    private final String name;
+    private String name;
     private List<String> yearRanges = new ArrayList<>();
 
     public Club(UUID id, String name) {
@@ -25,6 +25,36 @@ public class Club extends Entity {
         return new Club(id, name);
     }
 
+    public void modifyName(String newName) {
+        if (!this.name.equals(newName)) this.name = name;
+    }
+
+    public void delete() {
+        // Implement deletion logic if needed
+    }
+
+    public void addYearRange(String newYearRange) {
+        if (!yearRanges.contains(newYearRange)) yearRanges.add(newYearRange);
+    }
+
+    public void addYearRanges(List<String> newYearRanges) {
+        for (String yearRange : newYearRanges) {
+            addYearRange(yearRange);
+        }
+    }
+
+    public void removeYearRange(String yearRange) {
+        yearRanges.remove(yearRange);
+    }
+
+    public void clearYearRanges() {
+        yearRanges.clear();
+    }
+
+    public void setYearRanges(List<String> newYearRanges) {
+        yearRanges = newYearRanges;
+    }
+
     public UUID getId() {
         return id;
     }
@@ -37,22 +67,6 @@ public class Club extends Entity {
         return Collections.unmodifiableList(yearRanges);
     }
 
-    public void addYearRange(String newYearRange) {
-        yearRanges.add(newYearRange);
-    }
-
-    public void removeYearRange(String yearRange) {
-        yearRanges.remove(yearRange);
-    }
-
-    public void clearYearRanges() {
-        yearRanges.clear();
-    }
-
-    public void updateAllRanges(List<String> newYearRanges) {
-        yearRanges = newYearRanges;
-    }
-
     @Override
     public String toString() {
         return "Club{" +
@@ -60,6 +74,19 @@ public class Club extends Entity {
                 ", name='" + name + '\'' +
                 ", yearRanges=" + yearRanges +
                 '}';
+    }
+
+    public static void main(String[] args) {
+        Club club = Club.createNew("My Club");
+        club.addYearRange("2020-2021");
+        club.addYearRange("2021-2022");
+        System.out.println(club);
+
+        club.addYearRange("2022-2023");
+        System.out.println("After adding a year range: " + club);
+
+        club.addYearRange("2022-2023"); // Adding duplicate
+        System.out.println("After adding a duplicate year range: " + club);
     }
 }
 

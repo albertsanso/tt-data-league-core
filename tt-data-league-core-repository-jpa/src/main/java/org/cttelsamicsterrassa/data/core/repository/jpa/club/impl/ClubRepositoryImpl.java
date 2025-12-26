@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Transactional
 @Component
@@ -28,7 +29,7 @@ public class ClubRepositoryImpl implements ClubRepository {
     }
 
     @Override
-    public Optional<Club> findById(String id) {
+    public Optional<Club> findById(UUID id) {
         return clubRepositoryHelper.findById(id)
                 .map(clubJPAToClubMapper);
     }
@@ -49,13 +50,18 @@ public class ClubRepositoryImpl implements ClubRepository {
     }
 
     @Override
-    public boolean existsById(String id) {
+    public boolean existsById(UUID id) {
         return clubRepositoryHelper.existsById(id);
     }
 
     @Override
     public boolean existsByName(String name) {
         return clubRepositoryHelper.existsByName(name);
+    }
+
+    @Override
+    public void deteleById(UUID id) {
+        clubRepositoryHelper.deleteById(id);
     }
 
     @Override
