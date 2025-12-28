@@ -9,6 +9,7 @@ import org.cttelsamicsterrassa.data.core.repository.jpa.club_member.mapper.ClubM
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -37,6 +38,22 @@ public class ClubMemberRepositoryImpl implements ClubMemberRepository {
     @Override
     public boolean existsByPracticionerIdAndClubId(UUID practicionerId, UUID clubId) {
         return clubMemberRepositoryHelper.findByPracticionerIdAndClubId(practicionerId, clubId).isPresent();
+    }
+
+    @Override
+    public List<ClubMember> findByClubId(UUID clubId) {
+        return clubMemberRepositoryHelper.findByClubId(clubId)
+                .stream()
+                .map(clubMemberJPAToClubMemberMapper)
+                .toList();
+    }
+
+    @Override
+    public List<ClubMember> findByPracticionerId(UUID practicionerId) {
+        return clubMemberRepositoryHelper.findByPracticionerId(practicionerId)
+                .stream()
+                .map(clubMemberJPAToClubMemberMapper)
+                .toList();
     }
 
     @Override
