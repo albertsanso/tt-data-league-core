@@ -27,7 +27,7 @@ public interface SeasonPlayerRepositoryHelper extends JpaRepository<SeasonPlayer
             String practicionerName
     );
 
-    List<SeasonPlayerJPA> findByLicenseIdAndLicenseTag(
+    List<SeasonPlayerJPA> findByLicenseRefAndLicenseTag(
             String licenseId,
             String licenseTag
     );

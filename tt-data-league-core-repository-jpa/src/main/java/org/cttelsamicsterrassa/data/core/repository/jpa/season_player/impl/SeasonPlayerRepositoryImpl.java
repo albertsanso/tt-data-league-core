@@ -96,7 +96,7 @@ public class SeasonPlayerRepositoryImpl implements SeasonPlayerRepository {
 
     @Override
     public List<SeasonPlayer> findByLicense(String licenseId, String licenseTag) {
-        return seasonPlayerRepositoryHelper.findByLicenseIdAndLicenseTag(licenseId, licenseTag)
+        return seasonPlayerRepositoryHelper.findByLicenseRefAndLicenseTag(licenseId, licenseTag)
                 .stream()
                 .map(seasonPlayerJPAToSeasonPlayerMapper)
                 .toList();
