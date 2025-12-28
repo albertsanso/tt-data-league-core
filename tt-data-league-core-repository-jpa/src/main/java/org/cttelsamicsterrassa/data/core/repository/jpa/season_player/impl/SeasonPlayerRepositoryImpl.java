@@ -102,6 +102,14 @@ public class SeasonPlayerRepositoryImpl implements SeasonPlayerRepository {
                 .toList();
     }
 
+    @Override
+    public List<SeasonPlayer> findByPracticionerId(UUID practicionerId) {
+        return seasonPlayerRepositoryHelper.findByClubMember_Practicioner_Id(practicionerId)
+                .stream()
+                .map(seasonPlayerJPAToSeasonPlayerMapper)
+                .toList();
+    }
+
     public void save(SeasonPlayer seasonPlayer) {
         seasonPlayerRepositoryHelper.save(seasonPlayerToSeasonPlayerJPAMapper.apply(seasonPlayer));
     }

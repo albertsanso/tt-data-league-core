@@ -32,4 +32,6 @@ public interface SeasonPlayerRepositoryHelper extends JpaRepository<SeasonPlayer
             String licenseTag
     );
 
+    List<SeasonPlayerJPA> findByClubMember_Practicioner_Id(UUID practicionerId);
+
 }
