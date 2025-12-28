@@ -35,6 +35,11 @@ public class ClubMemberRepositoryImpl implements ClubMemberRepository {
     }
 
     @Override
+    public boolean existsByPracticionerIdAndClubId(UUID practicionerId, UUID clubId) {
+        return clubMemberRepositoryHelper.findByPracticionerIdAndClubId(practicionerId, clubId).isPresent();
+    }
+
+    @Override
     public void save(ClubMember clubMember) {
         clubMemberRepositoryHelper.save(clubMemberToClubMemberJPAMapper.apply(clubMember));
     }

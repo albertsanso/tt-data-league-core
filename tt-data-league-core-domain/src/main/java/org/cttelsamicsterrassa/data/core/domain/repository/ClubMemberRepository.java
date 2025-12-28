@@ -7,5 +7,6 @@ import java.util.UUID;
 
 public interface ClubMemberRepository {
     Optional<ClubMember> findByPracticionerIdAndClubId(UUID practicionerId, UUID clubId);
+    boolean existsByPracticionerIdAndClubId(UUID practicionerId, UUID clubId);
     void save(ClubMember clubMember);
 }

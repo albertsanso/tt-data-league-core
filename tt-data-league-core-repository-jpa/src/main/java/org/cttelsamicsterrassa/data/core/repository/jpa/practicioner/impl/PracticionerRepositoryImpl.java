@@ -30,7 +30,7 @@ public class PracticionerRepositoryImpl implements PracticionerRepository {
 
     @Override
     public Optional<Practicioner> findById(UUID id) {
-        return practicionerRepositoryHelper.findById(id.toString()).map(fromJPAMapper);
+        return practicionerRepositoryHelper.findById(id).map(fromJPAMapper);
     }
 
     @Override
