@@ -12,5 +12,7 @@ public interface SeasonPlayerRepository {
     Optional<SeasonPlayer> findByPracticionerNameAndClubNameAndSeason(String practicionerName, String clubName, String season);
     List<SeasonPlayer> findBySimilarName(String name);
     List<SeasonPlayer> findBySimilarNames(List<String> nameFragments);
+    List<SeasonPlayer> findByLicense(String licenseId, String licenseTag);
     void save(SeasonPlayer seasonPlayer);
+    void delete(SeasonPlayer seasonPlayer);
 }

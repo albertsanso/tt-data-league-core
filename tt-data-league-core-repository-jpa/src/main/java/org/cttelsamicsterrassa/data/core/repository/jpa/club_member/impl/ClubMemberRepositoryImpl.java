@@ -31,6 +31,11 @@ public class ClubMemberRepositoryImpl implements ClubMemberRepository {
     }
 
     @Override
+    public Optional<ClubMember> findById(UUID id) {
+        return clubMemberRepositoryHelper.findById(id).map(clubMemberJPAToClubMemberMapper);
+    }
+
+    @Override
     public Optional<ClubMember> findByPracticionerIdAndClubId(UUID practicionerId, UUID clubId) {
         return clubMemberRepositoryHelper.findByPracticionerIdAndClubId(practicionerId, clubId).map(clubMemberJPAToClubMemberMapper);
     }

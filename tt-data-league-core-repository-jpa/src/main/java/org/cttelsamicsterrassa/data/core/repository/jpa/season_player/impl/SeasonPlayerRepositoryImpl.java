@@ -94,8 +94,21 @@ public class SeasonPlayerRepositoryImpl implements SeasonPlayerRepository {
         return results;
     }
 
+    @Override
+    public List<SeasonPlayer> findByLicense(String licenseId, String licenseTag) {
+        return seasonPlayerRepositoryHelper.findByLicenseIdAndLicenseTag(licenseId, licenseTag)
+                .stream()
+                .map(seasonPlayerJPAToSeasonPlayerMapper)
+                .toList();
+    }
+
     public void save(SeasonPlayer seasonPlayer) {
         seasonPlayerRepositoryHelper.save(seasonPlayerToSeasonPlayerJPAMapper.apply(seasonPlayer));
+    }
+
+    @Override
+    public void delete(SeasonPlayer seasonPlayer) {
+        seasonPlayerRepositoryHelper.deleteById(seasonPlayer.getId());
     }
 
 }

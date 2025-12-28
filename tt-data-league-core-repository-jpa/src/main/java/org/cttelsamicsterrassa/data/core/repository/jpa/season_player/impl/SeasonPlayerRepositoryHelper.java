@@ -26,4 +26,10 @@ public interface SeasonPlayerRepositoryHelper extends JpaRepository<SeasonPlayer
     List<SeasonPlayerJPA> findByClubMember_Practicioner_FullNameContainingIgnoreCase(
             String practicionerName
     );
+
+    List<SeasonPlayerJPA> findByLicenseIdAndLicenseTag(
+            String licenseId,
+            String licenseTag
+    );
+
 }

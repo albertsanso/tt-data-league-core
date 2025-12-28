@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface ClubMemberRepositoryHelper extends JpaRepository<ClubMemberJPA, String> {
+public interface ClubMemberRepositoryHelper extends JpaRepository<ClubMemberJPA, UUID> {
     Optional<ClubMemberJPA> findByPracticionerIdAndClubId(UUID practicionerId, UUID clubId);
     List<ClubMemberJPA> findByClubId(UUID clubId);
     List<ClubMemberJPA> findByPracticionerId(UUID practicionerId);
