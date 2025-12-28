@@ -12,6 +12,7 @@ public interface ClubRepository {
     List<Club> findAll();
     boolean existsById(UUID id);
     boolean existsByName(String name);
+    List<Club> searchBySimilarName(String name);
     public void deteleById(UUID id);
     void save(Club club);
 }

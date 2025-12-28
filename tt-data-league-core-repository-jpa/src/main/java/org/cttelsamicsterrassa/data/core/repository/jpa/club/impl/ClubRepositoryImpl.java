@@ -60,6 +60,13 @@ public class ClubRepositoryImpl implements ClubRepository {
     }
 
     @Override
+    public List<Club> searchBySimilarName(String name) {
+        return clubRepositoryHelper.findByNameContainingIgnoreCase(name).stream()
+                .map(clubJPAToClubMapper)
+                .toList();
+    }
+
+    @Override
     public void deteleById(UUID id) {
         clubRepositoryHelper.deleteById(id);
     }
