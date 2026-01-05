@@ -8,4 +8,14 @@ public record CompetitionInfo(
         String competitionGroup,
         String competitionGender
 ) {
+    public CompetitionInfo createCopy() {
+        return new CompetitionInfo(
+                this.competitionType,
+                this.competitionCategory,
+                this.competitionScope,
+                this.competitionScopeTag,
+                this.competitionGroup,
+                this.competitionGender
+        );
+    }
 }
