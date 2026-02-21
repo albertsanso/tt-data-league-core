@@ -32,13 +32,6 @@ public class SeasonPlayerResultRepositoryImpl implements SeasonPlayerResultRepos
     public Optional<SeasonPlayerResult> findById(UUID id) {
         return helper.findById(id).map(fromJPAMapper);
     }
-/*
-    public Optional<SeasonPlayerResult> findForBAK(
-            String season, String competition, String jornada, String group, String playerLetter, String matchLinkageId, UUID clubId) {
-        return helper.findBySeasonAndCompetitionAndJornadaAndGroupAndPlayerLetterAndMatchLinkageIdAndSeasonPlayer_ClubMember_Club_Id(
-                        season, competition,  jornada, group, playerLetter, matchLinkageId, clubId)
-                .map(fromJPAMapper);
-    }*/
 
     @Override
     public Optional<SeasonPlayerResult> findFor(
@@ -65,6 +58,11 @@ public class SeasonPlayerResultRepositoryImpl implements SeasonPlayerResultRepos
             matchLinkageId,
             clubId
         ).map(fromJPAMapper);
+    }
+
+    @Override
+    public Optional<SeasonPlayerResult> findByUniqueKey(String uniqueKey) {
+        return helper.findByMatchLinkageId(uniqueKey).map(fromJPAMapper);
     }
 
     @Override

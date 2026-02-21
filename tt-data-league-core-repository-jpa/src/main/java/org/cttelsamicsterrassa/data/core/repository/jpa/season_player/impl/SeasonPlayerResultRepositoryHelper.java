@@ -14,4 +14,6 @@ public interface SeasonPlayerResultRepositoryHelper extends JpaRepository<Season
             String season, String competitionType, String competitionCategory, String competitionScope, String competitionScopeTag, String competitionGroup,
             int matchDayNumber, String matchPlayerLetter, String matchLinkageId, UUID clubId
     );
+
+    Optional<SeasonPlayerResultJPA> findByMatchLinkageId(String matchLinkageId);
 }

@@ -26,7 +26,7 @@ public class Club extends Entity {
     }
 
     public void modifyName(String newName) {
-        if (!this.name.equals(newName)) this.name = name;
+        if (!this.name.equals(newName)) this.name = newName;
     }
 
     public void delete() {

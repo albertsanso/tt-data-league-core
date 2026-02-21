@@ -10,8 +10,8 @@ import java.util.UUID;
 public class ClubMember extends Entity {
     private final UUID id;
     private final Club club;
-    private Practicioner practicioner;
-    private List<String> yearRanges = new ArrayList();
+    private final Practicioner practicioner;
+    private List<String> yearRanges = new ArrayList<>();
 
     private ClubMember(UUID id, Club club, Practicioner practicioner) {
         this.id = id;

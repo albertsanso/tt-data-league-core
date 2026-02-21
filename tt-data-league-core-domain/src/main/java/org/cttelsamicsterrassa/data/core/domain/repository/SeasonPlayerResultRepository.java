@@ -19,5 +19,6 @@ public interface SeasonPlayerResultRepository {
             String matchLinkageId,
             UUID clubId
     );
+    Optional<SeasonPlayerResult> findByUniqueKey(String uniqueKey);
     void save(SeasonPlayerResult seasonPlayerResult);
 }
