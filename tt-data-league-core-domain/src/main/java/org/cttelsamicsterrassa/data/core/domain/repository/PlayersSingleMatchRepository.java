@@ -1,5 +1,6 @@
 package org.cttelsamicsterrassa.data.core.domain.repository;
 
+import org.cttelsamicsterrassa.data.core.domain.model.CompetitionInfo;
 import org.cttelsamicsterrassa.data.core.domain.model.PlayersSingleMatch;
 
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.UUID;
 public interface PlayersSingleMatchRepository {
     Optional<PlayersSingleMatch> findById(UUID id);
     Optional<PlayersSingleMatch> findBySeasonPlayerResultAbcIdAndSeasonPlayerResultXyzIdAndUniqueId(UUID seasonPlayerResultAbcId, UUID seasonPlayerResultXyzId, String uniqueId);
+    List<PlayersSingleMatch> findBySeasonAndCompetitionAndMatchDayNumber(String season, CompetitionInfo competitionInfo, int matchDayNumber);
     List<PlayersSingleMatch> findAll();
     void save(PlayersSingleMatch playerSingleMatch);
 }

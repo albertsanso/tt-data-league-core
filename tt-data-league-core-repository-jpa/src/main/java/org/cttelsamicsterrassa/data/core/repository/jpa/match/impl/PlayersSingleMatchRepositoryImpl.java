@@ -1,6 +1,7 @@
 package org.cttelsamicsterrassa.data.core.repository.jpa.match.impl;
 
 import jakarta.transaction.Transactional;
+import org.cttelsamicsterrassa.data.core.domain.model.CompetitionInfo;
 import org.cttelsamicsterrassa.data.core.domain.model.PlayersSingleMatch;
 import org.cttelsamicsterrassa.data.core.domain.repository.PlayersSingleMatchRepository;
 import org.cttelsamicsterrassa.data.core.repository.jpa.match.mapper.PlayersSingleMatchJPAToPlayersSingleMatchMapper;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Transactional
 @Component
@@ -40,6 +42,19 @@ public class PlayersSingleMatchRepositoryImpl implements PlayersSingleMatchRepos
         return helper.findBySeasonPlayerResultAbc_IdAndSeasonPlayerResultXyz_IdAndUniqueRowMatchId(
                 seasonPlayerResultAbcId, seasonPlayerResultXyzId, uniqueId)
                     .map(fromJpaMapper);
+    }
+
+    @Override
+    public List<PlayersSingleMatch> findBySeasonAndCompetitionAndMatchDayNumber(String season, CompetitionInfo competitionInfo, int matchDayNumber) {
+        return helper.findBySeasonAndCompetitionTypeAndCompetitionCategoryAndCompetitionScopeAndCompetitionScopeTagAndCompetitionGroupAndMatchDayNumber(
+                season,
+                competitionInfo.competitionType(),
+                competitionInfo.competitionCategory(),
+                competitionInfo.competitionScope(),
+                competitionInfo.competitionScopeTag(),
+                competitionInfo.competitionGroup(),
+                matchDayNumber
+        ).stream().map(fromJpaMapper).toList();
     }
 
     @Override
