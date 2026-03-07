@@ -1,0 +1,3 @@
+can you analyze the different modules and code deeply and infer a spec.md?
+
+can you deeply reanalyze the code and try to infer uses cases from the domain entities and classes and modify spec.md in order to show a higher level view, more functional perspective. Create a new ARCHITECTURE.md to move the technical and implementation details and make a reference to this new file from spec.md

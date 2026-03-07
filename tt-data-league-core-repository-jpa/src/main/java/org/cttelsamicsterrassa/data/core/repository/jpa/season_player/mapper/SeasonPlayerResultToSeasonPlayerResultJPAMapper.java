@@ -2,6 +2,7 @@ package org.cttelsamicsterrassa.data.core.repository.jpa.season_player.mapper;
 
 
 import org.cttelsamicsterrassa.data.core.domain.model.SeasonPlayerResult;
+import org.cttelsamicsterrassa.data.core.domain.model.TeamRole;
 import org.cttelsamicsterrassa.data.core.repository.jpa.season_player.model.SeasonPlayerResultJPA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,6 +41,7 @@ public class SeasonPlayerResultToSeasonPlayerResultJPAMapper implements Function
         resultJpa.setMatchGamesWon(seasonPlayerResult.getGamesWon());
 
         resultJpa.setSeasonPlayer(seasonPlayerToSeasonPlayerJPAMapper.apply(seasonPlayerResult.getSeasonPlayer()));
+        resultJpa.setTeamRole(seasonPlayerResult.getTeamRole().name());
 
         return resultJpa;
     }

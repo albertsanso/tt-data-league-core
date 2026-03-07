@@ -4,6 +4,7 @@ import org.cttelsamicsterrassa.data.core.domain.model.CompetitionInfo;
 import org.cttelsamicsterrassa.data.core.domain.model.MatchInfo;
 import org.cttelsamicsterrassa.data.core.domain.model.SeasonPlayer;
 import org.cttelsamicsterrassa.data.core.domain.model.SeasonPlayerResult;
+import org.cttelsamicsterrassa.data.core.domain.model.TeamRole;
 import org.cttelsamicsterrassa.data.core.repository.jpa.season_player.model.SeasonPlayerJPA;
 import org.cttelsamicsterrassa.data.core.repository.jpa.season_player.model.SeasonPlayerResultJPA;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,8 @@ public class SeasonPlayerResultJPAToSeasonPlayerResultMapper implements Function
                 seasonPlayerResultJPA.getSeason(),
                 competitionInfo,
                 seasonPlayer,
-                matchInfo
+                matchInfo,
+                TeamRole.valueOf(seasonPlayerResultJPA.getTeamRole())
         );
     }
 }

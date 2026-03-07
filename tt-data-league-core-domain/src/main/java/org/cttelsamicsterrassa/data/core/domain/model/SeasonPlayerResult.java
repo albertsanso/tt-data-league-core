@@ -9,27 +9,30 @@ public class SeasonPlayerResult {
     private final SeasonPlayer seasonPlayer;
     private final CompetitionInfo competitionInfo;
     private final MatchInfo matchInfo;
+    private final TeamRole teamRole;
 
-    private SeasonPlayerResult(UUID id, String season, CompetitionInfo competitionInfo, SeasonPlayer seasonPlayer, MatchInfo matchInfo) {
+    private SeasonPlayerResult(UUID id, String season, CompetitionInfo competitionInfo, SeasonPlayer seasonPlayer, MatchInfo matchInfo, TeamRole teamRole) {
         this.id = id;
         this.season = season;
         this.competitionInfo = competitionInfo;
         this.matchInfo = matchInfo;
         this.seasonPlayer = seasonPlayer;
+        this.teamRole = teamRole;
     }
 
     public static SeasonPlayerResult createNew(
             String season,
             CompetitionInfo competitionInfo,
             SeasonPlayer seasonPlayer,
-            MatchInfo matchInfo
+            MatchInfo matchInfo,
+            TeamRole teamRole
 ) {
         return new SeasonPlayerResult(
                 UUID.randomUUID(),
                 season,
                 competitionInfo,
                 seasonPlayer,
-                matchInfo);
+                matchInfo, teamRole);
     }
 
     public static SeasonPlayerResult createExisting(
@@ -37,13 +40,14 @@ public class SeasonPlayerResult {
             String season,
             CompetitionInfo competitionInfo,
             SeasonPlayer seasonPlayer,
-            MatchInfo matchInfo) {
+            MatchInfo matchInfo,
+            TeamRole teamRole) {
         return new SeasonPlayerResult(
                 id,
                 season,
                 competitionInfo,
                 seasonPlayer,
-                matchInfo);
+                matchInfo, teamRole);
     }
 
     public UUID getId() {
@@ -111,5 +115,9 @@ public class SeasonPlayerResult {
 
     public MatchInfo getMatchInfo() {
         return matchInfo;
+    }
+
+    public TeamRole getTeamRole() {
+        return teamRole;
     }
 }

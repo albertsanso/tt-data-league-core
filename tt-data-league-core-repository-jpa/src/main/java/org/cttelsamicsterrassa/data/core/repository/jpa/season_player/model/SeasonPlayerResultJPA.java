@@ -76,6 +76,9 @@ public class SeasonPlayerResultJPA {
     @Column(name = "match_linkage_id")
     private String matchLinkageId;
 
+    @Column(name = "team_role")
+    private String teamRole;
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
