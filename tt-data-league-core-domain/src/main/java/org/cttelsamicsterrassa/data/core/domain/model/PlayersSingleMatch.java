@@ -37,16 +37,16 @@ public class PlayersSingleMatch {
 
 
     public static PlayersSingleMatch createNew(
-            SeasonPlayerResult seasonPlayerResultAbc,
-            SeasonPlayerResult seasonPlayerResultXyz,
+            SeasonPlayerResult seasonPlayerResultLocal,
+            SeasonPlayerResult seasonPlayerResultVisitor,
             String season,
             CompetitionInfo competitionInfo,
             int matchDayNumber,
             String uniqueRowMatchId) {
         return new PlayersSingleMatch(
                 UUID.randomUUID(),
-                seasonPlayerResultAbc,
-                seasonPlayerResultXyz,
+                seasonPlayerResultLocal,
+                seasonPlayerResultVisitor,
                 season,
                 competitionInfo,
                 matchDayNumber,
@@ -55,16 +55,16 @@ public class PlayersSingleMatch {
 
     public static PlayersSingleMatch createExisting(
             UUID id,
-            SeasonPlayerResult seasonPlayerResultAbc,
-            SeasonPlayerResult seasonPlayerResultXyz,
+            SeasonPlayerResult seasonPlayerResultLocal,
+            SeasonPlayerResult seasonPlayerResultVisitor,
             String season,
             CompetitionInfo competitionInfo,
             int matchDayNumber,
             String uniqueRowMatchId) {
         return new PlayersSingleMatch(
                 id,
-                seasonPlayerResultAbc,
-                seasonPlayerResultXyz,
+                seasonPlayerResultLocal,
+                seasonPlayerResultVisitor,
                 season,
                 competitionInfo,
                 matchDayNumber,

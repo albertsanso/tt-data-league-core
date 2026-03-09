@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface PlayersSingleMatchRepository {
     Optional<PlayersSingleMatch> findById(UUID id);
-    Optional<PlayersSingleMatch> findBySeasonPlayerResultAbcIdAndSeasonPlayerResultXyzIdAndUniqueId(UUID seasonPlayerResultAbcId, UUID seasonPlayerResultXyzId, String uniqueId);
+    Optional<PlayersSingleMatch> findBySeasonPlayerResultLocalIdAndSeasonPlayerResultVisitorIdAndUniqueId(UUID seasonPlayerResultLocalId, UUID seasonPlayerResultVisitorId, String uniqueId);
     List<PlayersSingleMatch> findBySeasonAndCompetitionAndMatchDayNumber(String season, CompetitionInfo competitionInfo, int matchDayNumber);
     List<PlayersSingleMatch> findAll();
     void save(PlayersSingleMatch playerSingleMatch);

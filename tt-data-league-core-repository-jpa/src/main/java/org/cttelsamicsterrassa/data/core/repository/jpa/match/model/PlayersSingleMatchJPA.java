@@ -24,8 +24,8 @@ import java.util.UUID;
 @Table(
         name="PlayersSingleMatch",
         indexes = {
-                @Index(name="idx_player_result_abc_id", columnList="player_result_abc_id"),
-                @Index(name="idx_player_result_xyz_id", columnList="player_result_xyz_id"),
+                @Index(name="idx_player_result_local_id", columnList="player_result_local_id"),
+                @Index(name="idx_player_result_visitor_id", columnList="player_result_visitor_id"),
                 @Index(name="idx_unique_row_match_id", columnList="unique_row_match_id")
         }
 )

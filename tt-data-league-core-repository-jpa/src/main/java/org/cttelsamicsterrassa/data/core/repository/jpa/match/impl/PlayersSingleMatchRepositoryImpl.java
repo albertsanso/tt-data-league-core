@@ -40,9 +40,9 @@ public class PlayersSingleMatchRepositoryImpl implements PlayersSingleMatchRepos
     }
 
     @Override
-    public Optional<PlayersSingleMatch> findBySeasonPlayerResultAbcIdAndSeasonPlayerResultXyzIdAndUniqueId(UUID seasonPlayerResultAbcId, UUID seasonPlayerResultXyzId, String uniqueId) {
-        return helper.findBySeasonPlayerResultAbc_IdAndSeasonPlayerResultXyz_IdAndUniqueRowMatchId(
-                seasonPlayerResultAbcId, seasonPlayerResultXyzId, uniqueId)
+    public Optional<PlayersSingleMatch> findBySeasonPlayerResultLocalIdAndSeasonPlayerResultVisitorIdAndUniqueId(UUID seasonPlayerResultLocalId, UUID seasonPlayerResultVisitorId, String uniqueId) {
+        return helper.findBySeasonPlayerResultLocal_IdAndSeasonPlayerResultVisitor_IdAndUniqueRowMatchId(
+                        seasonPlayerResultLocalId, seasonPlayerResultVisitorId, uniqueId)
                     .map(fromJpaMapper);
     }
 

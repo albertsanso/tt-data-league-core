@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Repository
 public interface PlayersSingleMatchRepositoryHelper extends JpaRepository<PlayersSingleMatchJPA, UUID>, JpaSpecificationExecutor<PlayersSingleMatchJPA> {
-    Optional<PlayersSingleMatchJPA> findBySeasonPlayerResultAbc_IdAndSeasonPlayerResultXyz_IdAndUniqueRowMatchId(UUID seasonPlayerResultAbcId, UUID seasonPlayerResultXyzId, String uniqueRowMatchId);
+    Optional<PlayersSingleMatchJPA> findBySeasonPlayerResultLocal_IdAndSeasonPlayerResultVisitor_IdAndUniqueRowMatchId(UUID seasonPlayerResultLocalId, UUID seasonPlayerResultVisitorId, String uniqueRowMatchId);
     List<PlayersSingleMatchJPA> findBySeasonAndCompetitionTypeAndCompetitionCategoryAndCompetitionScopeAndCompetitionScopeTagAndCompetitionGroupAndMatchDayNumber(
             String season, String competitionType, String competitionCategory, String competitionScope, String competitionScopeTag, String competitionGroup, int matchDayNumber);
 }
