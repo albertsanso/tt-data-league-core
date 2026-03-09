@@ -39,7 +39,7 @@ public class SeasonPlayerResultJPAToSeasonPlayerResultMapper implements Function
                 seasonPlayerResultJPA.getMatchPlayerLetter(),
                 seasonPlayerResultJPA.getMatchGamePoints().stream().mapToInt(Integer::parseInt).toArray(),
                 seasonPlayerResultJPA.getMatchGamesWon(),
-                seasonPlayerResultJPA.getMatchLinkageId()
+                seasonPlayerResultJPA.getPlayersPairing()
         );
 
         SeasonPlayer seasonPlayer = seasonPlayerJPAToSeasonPlayerMapper.apply(seasonPlayerResultJPA.getSeasonPlayer());

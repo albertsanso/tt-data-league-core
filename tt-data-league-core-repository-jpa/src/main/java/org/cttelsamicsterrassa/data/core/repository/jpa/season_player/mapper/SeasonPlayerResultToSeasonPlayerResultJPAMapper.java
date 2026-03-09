@@ -35,10 +35,10 @@ public class SeasonPlayerResultToSeasonPlayerResultJPAMapper implements Function
         resultJpa.setMatchDayNumber(seasonPlayerResult.getMatchInfo().matchDayNumber());
         resultJpa.setMatchDay(seasonPlayerResult.getMatchInfo().matchDay());
         resultJpa.setMatchPlayerLetter(seasonPlayerResult.getMatchInfo().playerLetter());
-        resultJpa.setMatchLinkageId(seasonPlayerResult.getMatchInfo().matchLinkageId());
         resultJpa.setMatchGamePoints(Arrays.stream(seasonPlayerResult.getGamePoints())
                 .mapToObj(String::valueOf).toList());
         resultJpa.setMatchGamesWon(seasonPlayerResult.getGamesWon());
+        resultJpa.setPlayersPairing(seasonPlayerResult.getMatchInfo().playersPairing());
 
         resultJpa.setSeasonPlayer(seasonPlayerToSeasonPlayerJPAMapper.apply(seasonPlayerResult.getSeasonPlayer()));
         resultJpa.setTeamRole(seasonPlayerResult.getTeamRole().name());

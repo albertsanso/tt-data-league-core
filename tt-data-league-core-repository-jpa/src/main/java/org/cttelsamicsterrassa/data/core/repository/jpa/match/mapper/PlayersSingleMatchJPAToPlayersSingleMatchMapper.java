@@ -33,8 +33,8 @@ public class PlayersSingleMatchJPAToPlayersSingleMatchMapper implements Function
 
         return PlayersSingleMatch.createExisting(
                 playersSingleMatchJPA.getId(),
-                fromJPAMapper.apply(playersSingleMatchJPA.getSeasonPlayerResultAbc()),
-                fromJPAMapper.apply(playersSingleMatchJPA.getSeasonPlayerResultXyz()),
+                fromJPAMapper.apply(playersSingleMatchJPA.getSeasonPlayerResultLocal()),
+                fromJPAMapper.apply(playersSingleMatchJPA.getSeasonPlayerResultVisitor()),
                 playersSingleMatchJPA.getSeason(),
                 competitionInfo,
                 playersSingleMatchJPA.getMatchDayNumber(),

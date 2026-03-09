@@ -73,8 +73,8 @@ public class SeasonPlayerResultJPA {
     @Column(name = "match_games_won")
     private int matchGamesWon;
 
-    @Column(name = "match_linkage_id")
-    private String matchLinkageId;
+    @Column(name = "players_pairing", length = 100)
+    private String playersPairing;
 
     @Column(name = "team_role")
     private String teamRole;

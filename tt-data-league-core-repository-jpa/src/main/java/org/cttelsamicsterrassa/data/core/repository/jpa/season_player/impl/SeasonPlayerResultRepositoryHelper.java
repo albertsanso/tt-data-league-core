@@ -8,12 +8,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface SeasonPlayerResultRepositoryHelper extends JpaRepository<SeasonPlayerResultJPA, UUID>
-{
-    Optional<SeasonPlayerResultJPA> findBySeasonAndCompetitionTypeAndCompetitionCategoryAndCompetitionScopeAndCompetitionScopeTagAndCompetitionGroupAndMatchDayNumberAndMatchPlayerLetterAndMatchLinkageIdAndSeasonPlayer_ClubMember_Club_Id(
+public interface SeasonPlayerResultRepositoryHelper extends JpaRepository<SeasonPlayerResultJPA, UUID> {
+    Optional<SeasonPlayerResultJPA> findBySeasonAndCompetitionTypeAndCompetitionCategoryAndCompetitionScopeAndCompetitionScopeTagAndCompetitionGroupAndMatchDayNumberAndMatchPlayerLetterAndPlayersPairingAndTeamRoleAndSeasonPlayer_ClubMember_Club_Id(
             String season, String competitionType, String competitionCategory, String competitionScope, String competitionScopeTag, String competitionGroup,
-            int matchDayNumber, String matchPlayerLetter, String matchLinkageId, UUID clubId
+            int matchDayNumber, String matchPlayerLetter, String playersPairing, String teamRole, UUID clubId
     );
-
-    Optional<SeasonPlayerResultJPA> findByMatchLinkageId(String matchLinkageId);
 }

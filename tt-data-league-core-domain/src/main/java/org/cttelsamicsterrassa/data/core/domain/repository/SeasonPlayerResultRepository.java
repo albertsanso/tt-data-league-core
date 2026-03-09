@@ -1,6 +1,7 @@
 package org.cttelsamicsterrassa.data.core.domain.repository;
 
 import org.cttelsamicsterrassa.data.core.domain.model.SeasonPlayerResult;
+import org.cttelsamicsterrassa.data.core.domain.model.TeamRole;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -16,9 +17,9 @@ public interface SeasonPlayerResultRepository {
             String competitionGroup,
             int matchDayNumber,
             String matchPlayerLetter,
-            String matchLinkageId,
+            String matcPlayersPairing,
+            TeamRole matchPlayerRole,
             UUID clubId
     );
-    Optional<SeasonPlayerResult> findByUniqueKey(String uniqueKey);
     void save(SeasonPlayerResult seasonPlayerResult);
 }

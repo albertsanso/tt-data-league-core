@@ -6,9 +6,9 @@ public class PlayersSingleMatch {
 
     private final UUID id;
 
-    private final SeasonPlayerResult seasonPlayerResultAbc;
+    private final SeasonPlayerResult seasonPlayerResultLocal;
 
-    private final SeasonPlayerResult seasonPlayerResultXyz;
+    private final SeasonPlayerResult seasonPlayerResultVisitor;
 
     private final String season;
 
@@ -20,15 +20,15 @@ public class PlayersSingleMatch {
 
     private PlayersSingleMatch(
             UUID id,
-            SeasonPlayerResult seasonPlayerResultAbc,
-            SeasonPlayerResult seasonPlayerResultXyz,
+            SeasonPlayerResult seasonPlayerResultLocal,
+            SeasonPlayerResult seasonPlayerResultVisitor,
             String season,
             CompetitionInfo competitionInfo,
             int matchDayNumber,
             String uniqueRowMatchId) {
         this.id = id;
-        this.seasonPlayerResultAbc = seasonPlayerResultAbc;
-        this.seasonPlayerResultXyz = seasonPlayerResultXyz;
+        this.seasonPlayerResultLocal = seasonPlayerResultLocal;
+        this.seasonPlayerResultVisitor = seasonPlayerResultVisitor;
         this.season = season;
         this.competitionInfo = competitionInfo;
         this.matchDayNumber = matchDayNumber;
@@ -75,12 +75,12 @@ public class PlayersSingleMatch {
         return id;
     }
 
-    public SeasonPlayerResult getSeasonPlayerResultAbc() {
-        return seasonPlayerResultAbc;
+    public SeasonPlayerResult getSeasonPlayerResultLocal() {
+        return seasonPlayerResultLocal;
     }
 
-    public SeasonPlayerResult getSeasonPlayerResultXyz() {
-        return seasonPlayerResultXyz;
+    public SeasonPlayerResult getSeasonPlayerResultVisitor() {
+        return seasonPlayerResultVisitor;
     }
 
     public String getSeason() {

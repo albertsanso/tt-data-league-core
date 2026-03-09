@@ -6,6 +6,6 @@ public record MatchInfo(
         String playerLetter,
         int[] gamePoints,
         int gamesWon,
-        String matchLinkageId
+        String playersPairing
 ) {
 }

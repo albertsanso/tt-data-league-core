@@ -38,14 +38,14 @@ public class PlayersSingleMatchJPA {
     @NotNull
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "player_result_abc_id")
-    private SeasonPlayerResultJPA seasonPlayerResultAbc;
+    @JoinColumn(name = "player_result_local_id")
+    private SeasonPlayerResultJPA seasonPlayerResultLocal;
 
     @NotNull
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "player_result_xyz_id")
-    private SeasonPlayerResultJPA seasonPlayerResultXyz;
+    @JoinColumn(name = "player_result_visitor_id")
+    private SeasonPlayerResultJPA seasonPlayerResultVisitor;
 
     @Column(name = "season", length = 9)
     private String season;

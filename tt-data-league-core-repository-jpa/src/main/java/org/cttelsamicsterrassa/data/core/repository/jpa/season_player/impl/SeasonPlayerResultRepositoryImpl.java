@@ -2,6 +2,7 @@ package org.cttelsamicsterrassa.data.core.repository.jpa.season_player.impl;
 
 import jakarta.transaction.Transactional;
 import org.cttelsamicsterrassa.data.core.domain.model.SeasonPlayerResult;
+import org.cttelsamicsterrassa.data.core.domain.model.TeamRole;
 import org.cttelsamicsterrassa.data.core.domain.repository.SeasonPlayerResultRepository;
 import org.cttelsamicsterrassa.data.core.repository.jpa.season_player.mapper.SeasonPlayerResultJPAToSeasonPlayerResultMapper;
 import org.cttelsamicsterrassa.data.core.repository.jpa.season_player.mapper.SeasonPlayerResultToSeasonPlayerResultJPAMapper;
@@ -43,10 +44,11 @@ public class SeasonPlayerResultRepositoryImpl implements SeasonPlayerResultRepos
             String competitionGroup,
             int matchDayNumber,
             String matchPlayerLetter,
-            String matchLinkageId,
+            String matchPlayersPairing,
+            TeamRole teamRole,
             UUID clubId
     ) {
-        return helper.findBySeasonAndCompetitionTypeAndCompetitionCategoryAndCompetitionScopeAndCompetitionScopeTagAndCompetitionGroupAndMatchDayNumberAndMatchPlayerLetterAndMatchLinkageIdAndSeasonPlayer_ClubMember_Club_Id(
+        return helper.findBySeasonAndCompetitionTypeAndCompetitionCategoryAndCompetitionScopeAndCompetitionScopeTagAndCompetitionGroupAndMatchDayNumberAndMatchPlayerLetterAndPlayersPairingAndTeamRoleAndSeasonPlayer_ClubMember_Club_Id(
             season,
             competitionType,
             competitionCategory,
@@ -55,14 +57,10 @@ public class SeasonPlayerResultRepositoryImpl implements SeasonPlayerResultRepos
             competitionGroup,
             matchDayNumber,
             matchPlayerLetter,
-            matchLinkageId,
+            matchPlayersPairing,
+            teamRole.name(),
             clubId
         ).map(fromJPAMapper);
-    }
-
-    @Override
-    public Optional<SeasonPlayerResult> findByUniqueKey(String uniqueKey) {
-        return helper.findByMatchLinkageId(uniqueKey).map(fromJPAMapper);
     }
 
     @Override

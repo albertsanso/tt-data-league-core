@@ -47,7 +47,8 @@ public class SeasonPlayerResult {
                 season,
                 competitionInfo,
                 seasonPlayer,
-                matchInfo, teamRole);
+                matchInfo,
+                teamRole);
     }
 
     public UUID getId() {
@@ -84,10 +85,6 @@ public class SeasonPlayerResult {
 
     public int getGamesWon() {
         return matchInfo.gamesWon();
-    }
-
-    public String getMatchLinkageId() {
-        return matchInfo.matchLinkageId();
     }
 
     public String getMatchDay() {

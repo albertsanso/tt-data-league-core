@@ -22,8 +22,8 @@ public class PlayersSingleMatchToPlayersSingleMatchJPAMapper implements Function
     public PlayersSingleMatchJPA apply(PlayersSingleMatch playersSingleMatch) {
         PlayersSingleMatchJPA playersSingleMatchJPA = new PlayersSingleMatchJPA();
         playersSingleMatchJPA.setId(playersSingleMatch.getId());
-        playersSingleMatchJPA.setSeasonPlayerResultAbc(toJpaMapper.apply(playersSingleMatch.getSeasonPlayerResultAbc()));
-        playersSingleMatchJPA.setSeasonPlayerResultXyz(toJpaMapper.apply(playersSingleMatch.getSeasonPlayerResultXyz()));
+        playersSingleMatchJPA.setSeasonPlayerResultLocal(toJpaMapper.apply(playersSingleMatch.getSeasonPlayerResultLocal()));
+        playersSingleMatchJPA.setSeasonPlayerResultVisitor(toJpaMapper.apply(playersSingleMatch.getSeasonPlayerResultVisitor()));
         playersSingleMatchJPA.setSeason(playersSingleMatch.getSeason());
         playersSingleMatchJPA.setCompetitionType(playersSingleMatch.getCompetitionType());
         playersSingleMatchJPA.setCompetitionCategory(playersSingleMatch.getCompetitionCategory());

@@ -6,13 +6,15 @@ import org.cttelsamicsterrassa.data.core.domain.model.PlayersSingleMatch;
 import org.cttelsamicsterrassa.data.core.domain.repository.PlayersSingleMatchRepository;
 import org.cttelsamicsterrassa.data.core.repository.jpa.match.mapper.PlayersSingleMatchJPAToPlayersSingleMatchMapper;
 import org.cttelsamicsterrassa.data.core.repository.jpa.match.mapper.PlayersSingleMatchToPlayersSingleMatchJPAMapper;
+import org.cttelsamicsterrassa.data.core.repository.jpa.match.model.PlayersSingleMatchJPA;
+import org.cttelsamicsterrassa.data.core.repository.shared.SpecificationBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Transactional
 @Component
@@ -46,16 +48,20 @@ public class PlayersSingleMatchRepositoryImpl implements PlayersSingleMatchRepos
 
     @Override
     public List<PlayersSingleMatch> findBySeasonAndCompetitionAndMatchDayNumber(String season, CompetitionInfo competitionInfo, int matchDayNumber) {
-        return helper.findBySeasonAndCompetitionTypeAndCompetitionCategoryAndCompetitionScopeAndCompetitionScopeTagAndCompetitionGroupAndMatchDayNumber(
-                season,
-                competitionInfo.competitionType(),
-                competitionInfo.competitionCategory(),
-                competitionInfo.competitionScope(),
-                competitionInfo.competitionScopeTag(),
-                competitionInfo.competitionGroup(),
-                matchDayNumber
-        ).stream().map(fromJpaMapper).toList();
+        Specification<PlayersSingleMatchJPA> spec = new SpecificationBuilder<PlayersSingleMatchJPA>()
+                .equalIfPresent("season", season)
+                .equalIfPresent("competitionType", competitionInfo.competitionType())
+                .equalIfPresent("competitionCategory", competitionInfo.competitionCategory())
+                .equalIfPresent("competitionScope", competitionInfo.competitionScope())
+                .equalIfPresent("competitionScopeTag", competitionInfo.competitionScopeTag())
+                .equalIfPresent("competitionGroup", competitionInfo.competitionGroup())
+                .equalIfPresent("competitionGender", competitionInfo.competitionGender())
+                .equalIfPresent("matchDayNumber", matchDayNumber)
+                .build();
+        return helper.findAll(spec).stream().map(fromJpaMapper).toList();
     }
+
+
 
     @Override
     public List<PlayersSingleMatch> findAll() {
