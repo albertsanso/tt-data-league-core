@@ -24,6 +24,11 @@ public class SpecificationBuilder<T> {
         return this;
     }
 
+    /*
+    static Specification<User> nameEquals(String name) {
+        return (root, query, cb) -> cb.equal(root.get("name"), name);
+    }
+    */
     public Specification<T> build() {
         return specs.stream()
                 .reduce(Specification::and)

@@ -15,6 +15,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.validation.constraints.NotNull;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @Getter
@@ -73,5 +74,8 @@ public class PlayersSingleMatchJPA {
 
     @Column(name="unique_row_match_id", unique = false)
     private String uniqueRowMatchId;
+
+    @Column(name="match_date")
+    private ZonedDateTime matchDate;
 
 }

@@ -38,7 +38,8 @@ public class PlayersSingleMatchJPAToPlayersSingleMatchMapper implements Function
                 playersSingleMatchJPA.getSeason(),
                 competitionInfo,
                 playersSingleMatchJPA.getMatchDayNumber(),
-                playersSingleMatchJPA.getUniqueRowMatchId()
+                playersSingleMatchJPA.getUniqueRowMatchId(),
+                playersSingleMatchJPA.getMatchDate()
         );
     }
 }

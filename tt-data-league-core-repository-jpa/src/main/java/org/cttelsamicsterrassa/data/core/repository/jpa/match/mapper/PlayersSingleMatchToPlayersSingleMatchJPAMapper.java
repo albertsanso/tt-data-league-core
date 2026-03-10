@@ -33,6 +33,7 @@ public class PlayersSingleMatchToPlayersSingleMatchJPAMapper implements Function
         playersSingleMatchJPA.setCompetitionGender(playersSingleMatch.getCompetitionGender());
         playersSingleMatchJPA.setMatchDayNumber(playersSingleMatch.getMatchDayNumber());
         playersSingleMatchJPA.setUniqueRowMatchId(playersSingleMatch.getUniqueRowMatchId());
+        playersSingleMatchJPA.setMatchDate(playersSingleMatch.getMatchDateTime());
         return playersSingleMatchJPA;
     }
 }

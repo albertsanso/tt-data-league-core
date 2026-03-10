@@ -1,5 +1,6 @@
 package org.cttelsamicsterrassa.data.core.domain.model;
 
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 public class PlayersSingleMatch {
@@ -18,6 +19,8 @@ public class PlayersSingleMatch {
 
     private final String uniqueRowMatchId;
 
+    private final ZonedDateTime matchDateTime;
+
     private PlayersSingleMatch(
             UUID id,
             SeasonPlayerResult seasonPlayerResultLocal,
@@ -25,7 +28,8 @@ public class PlayersSingleMatch {
             String season,
             CompetitionInfo competitionInfo,
             int matchDayNumber,
-            String uniqueRowMatchId) {
+            String uniqueRowMatchId,
+            ZonedDateTime matchDateTime) {
         this.id = id;
         this.seasonPlayerResultLocal = seasonPlayerResultLocal;
         this.seasonPlayerResultVisitor = seasonPlayerResultVisitor;
@@ -33,6 +37,7 @@ public class PlayersSingleMatch {
         this.competitionInfo = competitionInfo;
         this.matchDayNumber = matchDayNumber;
         this.uniqueRowMatchId = uniqueRowMatchId;
+        this.matchDateTime = matchDateTime;
     }
 
 
@@ -42,7 +47,8 @@ public class PlayersSingleMatch {
             String season,
             CompetitionInfo competitionInfo,
             int matchDayNumber,
-            String uniqueRowMatchId) {
+            String uniqueRowMatchId,
+            ZonedDateTime matchDateTime) {
         return new PlayersSingleMatch(
                 UUID.randomUUID(),
                 seasonPlayerResultLocal,
@@ -50,7 +56,8 @@ public class PlayersSingleMatch {
                 season,
                 competitionInfo,
                 matchDayNumber,
-                uniqueRowMatchId);
+                uniqueRowMatchId,
+                matchDateTime);
     }
 
     public static PlayersSingleMatch createExisting(
@@ -60,7 +67,8 @@ public class PlayersSingleMatch {
             String season,
             CompetitionInfo competitionInfo,
             int matchDayNumber,
-            String uniqueRowMatchId) {
+            String uniqueRowMatchId,
+            ZonedDateTime matchDateTime) {
         return new PlayersSingleMatch(
                 id,
                 seasonPlayerResultLocal,
@@ -68,7 +76,8 @@ public class PlayersSingleMatch {
                 season,
                 competitionInfo,
                 matchDayNumber,
-                uniqueRowMatchId);
+                uniqueRowMatchId,
+                matchDateTime);
     }
 
     public UUID getId() {
@@ -117,5 +126,9 @@ public class PlayersSingleMatch {
 
     public String getUniqueRowMatchId() {
         return uniqueRowMatchId;
+    }
+
+    public ZonedDateTime getMatchDateTime() {
+        return matchDateTime;
     }
 }
