@@ -6,6 +6,7 @@ import org.cttelsamicsterrassa.data.core.domain.model.CompetitionInfo;
 import org.cttelsamicsterrassa.data.core.domain.model.PlayersSingleMatch;
 import org.cttelsamicsterrassa.data.core.domain.model.SeasonPlayerResult;
 import org.cttelsamicsterrassa.data.core.domain.repository.PlayersSingleMatchRepository;
+import org.cttelsamicsterrassa.data.core.repository.jpa.club.model.ClubJPA;
 import org.cttelsamicsterrassa.data.core.repository.jpa.club_member.model.ClubMemberJPA;
 import org.cttelsamicsterrassa.data.core.repository.jpa.match.mapper.PlayersSingleMatchJPAToPlayersSingleMatchMapper;
 import org.cttelsamicsterrassa.data.core.repository.jpa.match.mapper.PlayersSingleMatchToPlayersSingleMatchJPAMapper;
@@ -46,6 +47,16 @@ public class PlayersSingleMatchRepositoryImpl implements PlayersSingleMatchRepos
     }
 
     @Override
+    public List<PlayersSingleMatch> findByTeamName(String teamName) {
+        if (teamName == null || teamName.isEmpty()) {
+            return List.of();
+        }
+
+        Specification<PlayersSingleMatchJPA> spec = buildTeamNameSpec(teamName);
+        return helper.findAll(spec).stream().map(fromJpaMapper).toList();
+    }
+
+    @Override
     public Optional<PlayersSingleMatch> findBySeasonPlayerResultLocalIdAndSeasonPlayerResultVisitorIdAndUniqueId(UUID seasonPlayerResultLocalId, UUID seasonPlayerResultVisitorId, String uniqueId) {
         return helper.findBySeasonPlayerResultLocal_IdAndSeasonPlayerResultVisitor_IdAndUniqueRowMatchId(
                         seasonPlayerResultLocalId, seasonPlayerResultVisitorId, uniqueId)
@@ -53,7 +64,7 @@ public class PlayersSingleMatchRepositoryImpl implements PlayersSingleMatchRepos
     }
 
     @Override
-    public List<PlayersSingleMatch> findBySeasonAndCompetitionAndMatchDayNumber(String season, CompetitionInfo competitionInfo, int matchDayNumber, String practitionerName) {
+    public List<PlayersSingleMatch> findBySeasonAndCompetitionAndMatchDayNumber(String season, CompetitionInfo competitionInfo, Integer matchDayNumber, String practitionerName) {
 
         Specification<PlayersSingleMatchJPA> spec = new SpecificationBuilder<PlayersSingleMatchJPA>()
                 .equalIfPresent("season", season)
@@ -67,7 +78,7 @@ public class PlayersSingleMatchRepositoryImpl implements PlayersSingleMatchRepos
                 .build();
 
         return helper.findAll(practitionerName == null || practitionerName.isEmpty() ?
-                        spec : spec.or(buildPracticionerNameSpec(practitionerName)))
+                        spec : spec.and(buildPracticionerNameSpec(practitionerName)))
                 .stream()
                 .map(fromJpaMapper)
                 .toList();
@@ -88,6 +99,23 @@ public class PlayersSingleMatchRepositoryImpl implements PlayersSingleMatchRepos
             return cb.or(
                     cb.like(localPracticionerJoin.get("fullName"), "%" + practitionerName + "%"),
                     cb.like(visitorPracticionerJoin.get("fullName"), "%" + practitionerName + "%")
+            );
+        };
+    }
+
+    private Specification<PlayersSingleMatchJPA> buildTeamNameSpec(String teamName) {
+        return (root, query, cb) -> {
+            Join<PlayersSingleMatchJPA, SeasonPlayerResultJPA> localJoin = root.join("seasonPlayerResultLocal");
+            Join<SeasonPlayerResultJPA, SeasonPlayerJPA> localSeasonPlayerJoin = localJoin.join("seasonPlayer");
+            Join<SeasonPlayerJPA, ClubMemberJPA> localClubMemberJoin = localSeasonPlayerJoin.join("clubMember");
+
+            Join<PlayersSingleMatchJPA, SeasonPlayerResultJPA> visitorJoin = root.join("seasonPlayerResultVisitor");
+            Join<SeasonPlayerResultJPA, SeasonPlayerJPA> visitorSeasonPlayerJoin = visitorJoin.join("seasonPlayer");
+            Join<SeasonPlayerJPA, ClubMemberJPA> visitorClubMemberJoin = visitorSeasonPlayerJoin.join("clubMember");
+
+            return cb.or(
+                    cb.like(localClubMemberJoin.get("club").get("name"), "%" + teamName + "%"),
+                    cb.like(visitorClubMemberJoin.get("club").get("name"), "%" + teamName + "%")
             );
         };
     }
