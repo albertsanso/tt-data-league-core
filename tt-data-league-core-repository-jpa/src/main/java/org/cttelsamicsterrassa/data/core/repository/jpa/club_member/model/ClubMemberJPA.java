@@ -15,8 +15,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.cttelsamicsterrassa.data.core.repository.jpa.club.model.ClubJPA;
 import org.cttelsamicsterrassa.data.core.repository.jpa.practicioner.model.PracticionerJPA;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.type.SqlTypes;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -37,7 +39,8 @@ import java.util.UUID;
 public class ClubMemberJPA {
 
     @Id
-    @Column(columnDefinition = "BINARY(16)", updatable = false, nullable = false)
+    @Column(updatable = false, nullable = false)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID id;
 
     @NotNull
@@ -55,7 +58,6 @@ public class ClubMemberJPA {
     @ElementCollection
     @CollectionTable(
             name = "ClubMemberYearRange",
-            schema = "bcnesadata",
             joinColumns = @JoinColumn(name = "club_member_id")
     )
     @Column(name = "year_range")

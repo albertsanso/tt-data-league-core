@@ -12,6 +12,8 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +32,8 @@ import java.util.UUID;
 public class ClubJPA {
 
     @Id
-    @Column(columnDefinition = "BINARY(16)", updatable = false, nullable = false)
+    @Column(updatable = false, nullable = false)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID id;
 
     private String name;
@@ -38,7 +41,6 @@ public class ClubJPA {
     @ElementCollection
     @CollectionTable(
             name = "ClubYearRange",
-            schema = "bcnesadata",
             joinColumns = @JoinColumn(name = "club_id")
     )
     @Column(name = "year_range")
