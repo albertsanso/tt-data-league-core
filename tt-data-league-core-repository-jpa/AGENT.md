@@ -18,6 +18,10 @@ This module provides JPA-based implementations of the repository interfaces defi
 ### Layer Structure
 ```
 repository/jpa/
+├── auth/
+│   ├── impl/
+│   ├── mapper/
+│   └── model/
 ├── club/
 │   ├── impl/           # Repository implementations
 │   ├── mapper/         # Domain ↔ JPA entity mappers
@@ -57,6 +61,13 @@ repository/jpa/
 - **JPA Models:** Database-specific entities in `repository/jpa/*/model` with Hibernate annotations
 - **Mappers:** Bidirectional conversion logic (JPA → Domain and Domain → JPA)
 - **Repositories:** Implementation of domain interfaces with @Transactional support
+
+### FEAT-001 Authentication Persistence
+- `auth/model/UserJPA`: JPA model for users (`AppUser` table, unique username/email indexes)
+- `auth/mapper/UserToUserJPAMapper`: Domain `User` -> `UserJPA`
+- `auth/mapper/UserJPAToUserMapper`: `UserJPA` -> Domain `User`
+- `auth/impl/UserRepositoryHelper`: Spring Data helper with username/email queries
+- `auth/impl/UserRepositoryImpl`: `UserRepository` implementation used by domain auth service
 
 ---
 

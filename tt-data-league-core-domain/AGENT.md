@@ -373,6 +373,27 @@ src/main/java/org/cttelsamicsterrassa/data/core/domain/
 
 ---
 
+## Authentication Slice (FEAT-001)
+
+### New Packages
+- `model/auth`: `User` entity with UUID identity, email/username, bcrypt hash, created timestamp, active flag
+- `repository/auth`: `UserRepository` contract for lookup, uniqueness checks, persistence, and delete methods
+- `service/auth`: `AuthenticationService`, `PasswordHasher`, `BcryptPasswordHasher`, `UserValidator`, auth exceptions
+
+### Core Flow
+1. `AuthenticationService.registerUser(...)` validates input and uniqueness.
+2. Password is hashed through `PasswordHasher` (bcrypt implementation provided).
+3. Persisted through `UserRepository` (implemented in JPA module).
+4. `authenticateUser(...)` returns `Optional<User>` only for active users with matching hash.
+
+### Testing Surface
+- `UserTest`: entity creation, password verification/change, enable/disable lifecycle
+- `BcryptPasswordHasherTest`: salt/hash behavior and verification
+- `AuthenticationServiceTest`: registration and authentication behavior with mocked repository
+- `UserValidatorTest`: username/email/password validation rules
+
+---
+
 ## Version Information
 - **Module Version:** 0.0.1-SNAPSHOT
 - **Java Version:** 21
