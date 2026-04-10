@@ -4,9 +4,7 @@ import jakarta.persistence.criteria.Join;
 import jakarta.transaction.Transactional;
 import org.cttelsamicsterrassa.data.core.domain.model.CompetitionInfo;
 import org.cttelsamicsterrassa.data.core.domain.model.PlayersSingleMatch;
-import org.cttelsamicsterrassa.data.core.domain.model.SeasonPlayerResult;
 import org.cttelsamicsterrassa.data.core.domain.repository.PlayersSingleMatchRepository;
-import org.cttelsamicsterrassa.data.core.repository.jpa.club.model.ClubJPA;
 import org.cttelsamicsterrassa.data.core.repository.jpa.club_member.model.ClubMemberJPA;
 import org.cttelsamicsterrassa.data.core.repository.jpa.match.mapper.PlayersSingleMatchJPAToPlayersSingleMatchMapper;
 import org.cttelsamicsterrassa.data.core.repository.jpa.match.mapper.PlayersSingleMatchToPlayersSingleMatchJPAMapper;
@@ -68,16 +66,16 @@ public class PlayersSingleMatchRepositoryImpl implements PlayersSingleMatchRepos
 
         Specification<PlayersSingleMatchJPA> spec = new SpecificationBuilder<PlayersSingleMatchJPA>()
                 .equalIfPresent("season", season)
-                .equalIfPresent("competitionType", competitionInfo.competitionType())
-                .equalIfPresent("competitionCategory", competitionInfo.competitionCategory())
-                .equalIfPresent("competitionScope", competitionInfo.competitionScope())
-                .equalIfPresent("competitionScopeTag", competitionInfo.competitionScopeTag())
-                .equalIfPresent("competitionGroup", competitionInfo.competitionGroup())
-                .equalIfPresent("competitionGender", competitionInfo.competitionGender())
+                .equalIfPresent("competitionType", competitionInfo == null ? null : competitionInfo.competitionType())
+                .equalIfPresent("competitionCategory", competitionInfo == null ? null : competitionInfo.competitionCategory())
+                .equalIfPresent("competitionScope", competitionInfo == null ? null : competitionInfo.competitionScope())
+                .equalIfPresent("competitionScopeTag", competitionInfo == null ? null : competitionInfo.competitionScopeTag())
+                .equalIfPresent("competitionGroup", competitionInfo == null ? null : competitionInfo.competitionGroup())
+                .equalIfPresent("competitionGender", competitionInfo == null ? null : competitionInfo.competitionGender())
                 .equalIfPresent("matchDayNumber", matchDayNumber)
                 .build();
 
-        return helper.findAll(practitionerName == null || practitionerName.isEmpty() ?
+        return helper.findAll(practitionerName == null || practitionerName.isBlank() ?
                         spec : spec.and(buildPracticionerNameSpec(practitionerName)))
                 .stream()
                 .map(fromJpaMapper)
@@ -85,6 +83,8 @@ public class PlayersSingleMatchRepositoryImpl implements PlayersSingleMatchRepos
     }
 
     private Specification<PlayersSingleMatchJPA> buildPracticionerNameSpec(String practitionerName) {
+        String normalizedPractitionerName = "%" + practitionerName.toLowerCase() + "%";
+
         return (root, query, cb) -> {
             Join<PlayersSingleMatchJPA, SeasonPlayerResultJPA> localJoin = root.join("seasonPlayerResultLocal");
             Join<SeasonPlayerResultJPA, SeasonPlayerJPA> localSeasonPlayerJoin = localJoin.join("seasonPlayer");
@@ -97,8 +97,8 @@ public class PlayersSingleMatchRepositoryImpl implements PlayersSingleMatchRepos
             Join<ClubMemberJPA, PracticionerJPA> visitorPracticionerJoin = visitorClubMemberJoin.join("practicioner");
 
             return cb.or(
-                    cb.like(localPracticionerJoin.get("fullName"), "%" + practitionerName + "%"),
-                    cb.like(visitorPracticionerJoin.get("fullName"), "%" + practitionerName + "%")
+                    cb.like(cb.lower(localPracticionerJoin.get("fullName")), normalizedPractitionerName),
+                    cb.like(cb.lower(visitorPracticionerJoin.get("fullName")), normalizedPractitionerName)
             );
         };
     }
