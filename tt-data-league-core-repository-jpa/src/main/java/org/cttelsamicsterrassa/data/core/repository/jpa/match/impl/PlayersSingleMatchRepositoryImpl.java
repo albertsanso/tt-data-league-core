@@ -126,6 +126,11 @@ public class PlayersSingleMatchRepositoryImpl implements PlayersSingleMatchRepos
     }
 
     @Override
+    public void deteleById(UUID id) {
+        helper.deleteById(id);
+    }
+
+    @Override
     public void save(PlayersSingleMatch playerSingleMatch) {
         helper.save(toJpaMapper.apply(playerSingleMatch));
     }

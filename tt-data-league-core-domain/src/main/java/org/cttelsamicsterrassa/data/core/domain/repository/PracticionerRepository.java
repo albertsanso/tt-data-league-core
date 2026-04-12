@@ -10,5 +10,6 @@ public interface PracticionerRepository {
     Optional<Practicioner> findById(UUID id);
     Optional<Practicioner> findByFullName(String fullName);
     List<Practicioner> findAll();
+    public void deteleById(UUID id);
     void save(Practicioner practicioner);
 }

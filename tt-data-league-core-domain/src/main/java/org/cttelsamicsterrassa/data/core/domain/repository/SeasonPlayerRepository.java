@@ -15,5 +15,5 @@ public interface SeasonPlayerRepository {
     List<SeasonPlayer> findByLicense(String licenseId, String licenseTag);
     List<SeasonPlayer> findByPracticionerId(UUID practicionerId);
     void save(SeasonPlayer seasonPlayer);
-    void delete(SeasonPlayer seasonPlayer);
+    void deleteById(UUID id);
 }

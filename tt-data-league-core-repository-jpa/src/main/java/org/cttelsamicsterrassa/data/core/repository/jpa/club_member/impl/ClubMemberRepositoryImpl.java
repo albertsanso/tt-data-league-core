@@ -62,6 +62,11 @@ public class ClubMemberRepositoryImpl implements ClubMemberRepository {
     }
 
     @Override
+    public void deteleById(UUID id) {
+        clubMemberRepositoryHelper.deleteById(id);
+    }
+
+    @Override
     public void save(ClubMember clubMember) {
         clubMemberRepositoryHelper.save(clubMemberToClubMemberJPAMapper.apply(clubMember));
     }

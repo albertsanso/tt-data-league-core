@@ -13,5 +13,6 @@ public interface PlayersSingleMatchRepository {
     Optional<PlayersSingleMatch> findBySeasonPlayerResultLocalIdAndSeasonPlayerResultVisitorIdAndUniqueId(UUID seasonPlayerResultLocalId, UUID seasonPlayerResultVisitorId, String uniqueId);
     List<PlayersSingleMatch> findBySeasonAndCompetitionAndMatchDayNumber(String season, CompetitionInfo competitionInfo, Integer matchDayNumber, String practitionerName);
     List<PlayersSingleMatch> findAll();
+    public void deteleById(UUID id);
     void save(PlayersSingleMatch playerSingleMatch);
 }

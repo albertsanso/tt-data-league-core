@@ -48,6 +48,11 @@ public class PracticionerRepositoryImpl implements PracticionerRepository {
     }
 
     @Override
+    public void deteleById(UUID id) {
+        practicionerRepositoryHelper.deleteById(id);
+    }
+
+    @Override
     public void save(Practicioner practicioner) {
         practicionerRepositoryHelper.save(toJPAMapper.apply(practicioner));
     }

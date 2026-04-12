@@ -64,6 +64,11 @@ public class SeasonPlayerResultRepositoryImpl implements SeasonPlayerResultRepos
     }
 
     @Override
+    public void deteleById(UUID id) {
+        helper.deleteById(id);
+    }
+
+    @Override
     public void save(SeasonPlayerResult seasonPlayerResult) {
         helper.save(toJPAMapper.apply(seasonPlayerResult));
     }

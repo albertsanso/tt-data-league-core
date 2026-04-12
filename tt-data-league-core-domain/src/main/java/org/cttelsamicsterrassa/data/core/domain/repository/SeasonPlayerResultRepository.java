@@ -21,5 +21,6 @@ public interface SeasonPlayerResultRepository {
             TeamRole matchPlayerRole,
             UUID clubId
     );
+    public void deteleById(UUID id);
     void save(SeasonPlayerResult seasonPlayerResult);
 }

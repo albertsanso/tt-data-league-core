@@ -115,8 +115,8 @@ public class SeasonPlayerRepositoryImpl implements SeasonPlayerRepository {
     }
 
     @Override
-    public void delete(SeasonPlayer seasonPlayer) {
-        seasonPlayerRepositoryHelper.deleteById(seasonPlayer.getId());
+    public void deleteById(UUID id) {
+        seasonPlayerRepositoryHelper.deleteById(id);
     }
 
 }

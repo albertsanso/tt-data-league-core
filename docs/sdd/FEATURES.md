@@ -62,7 +62,6 @@ Any open questions, design decisions, or links.
 
 ## In Progress
 
----
 
 ## Backlog
 
@@ -93,13 +92,13 @@ allowing users to easily access relevant information about matches involving spe
 
 #### Feature Details
 → See [FEAT-002-DETAILS.md](./FEAT-002-DETAILS.md) for a detailed breakdown of the feature, build plan, and implementation steps.
----
 
+---
 
 ### FEAT-001: User Authentication
 - **Status:** done
 - **Priority:** high
-- **Effort:** medium (2–8h)
+- **Effort:** medium
 - **Depends on:** —
 
 #### Goal

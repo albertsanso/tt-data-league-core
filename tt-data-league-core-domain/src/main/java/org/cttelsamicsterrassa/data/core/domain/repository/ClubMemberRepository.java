@@ -12,5 +12,6 @@ public interface ClubMemberRepository {
     boolean existsByPracticionerIdAndClubId(UUID practicionerId, UUID clubId);
     List<ClubMember> findByClubId(UUID clubId);
     List<ClubMember> findByPracticionerId(UUID practicionerId);
+    public void deteleById(UUID id);
     void save(ClubMember clubMember);
 }
