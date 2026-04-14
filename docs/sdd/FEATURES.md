@@ -65,9 +65,30 @@ Any open questions, design decisions, or links.
 
 ## Backlog
 
-
-
 ## Done
+
+---
+
+### [FEAT-003] Add Practicioner repository use case for finding practicioners by name fragments.
+- **Status:** done
+- **Priority:** medium
+- **Effort:** medium
+- **Depends on:** —
+
+#### Goal
+Implement a repository use case that allows finding practitioners by name fragments, enabling users to search for practitioners even if they only remember part of the name.
+Support `query.name` as a space-separated list of fragments instead of exact full-name matching.
+
+#### Acceptance Criteria
+- [x] Given a valid `query.name`, the repository splits it into fragments by whitespace and performs case-insensitive matching against practitioner `fullName`.
+- [x] Given multiple fragments (e.g., `"john smi"`), the repository returns practitioners whose `fullName` contains all provided fragments, regardless of order and case.
+- [x] If no practitioners are found for the given name fragment, the repository returns an empty list.
+- [x] If `query.name` is `null` or blank, the repository throws an `IllegalArgumentException` with an appropriate error message.
+- [x] The implementation includes unit tests covering single-fragment and multi-fragment queries, no-result behavior, and invalid inputs (`null` or blank `query.name`).
+- [x] The implementation follows the existing code style and patterns used in the project, ensuring consistency and maintainability.
+
+#### Feature Details
+→ See [FEAT-003-DETAILS.md](./FEAT-003-DETAILS.md) for a detailed breakdown of the feature, build plan, and implementation steps.
 
 ---
 

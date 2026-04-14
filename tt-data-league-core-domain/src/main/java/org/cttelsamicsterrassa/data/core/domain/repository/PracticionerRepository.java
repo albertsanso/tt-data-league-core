@@ -9,6 +9,7 @@ import java.util.UUID;
 public interface PracticionerRepository {
     Optional<Practicioner> findById(UUID id);
     Optional<Practicioner> findByFullName(String fullName);
+    List<Practicioner> searchBySimilarName(String queryName);
     List<Practicioner> findAll();
     public void deteleById(UUID id);
     void save(Practicioner practicioner);
