@@ -12,9 +12,9 @@
   protection: IMMUTABLE
 -->
 
-# tt-data-league-core-domain Module - Agent Guide
+# tt-data-league-core-domain — Agent Guide
 
-> Inherits global context from [root AGENTS.md](../AGENTS.md).
+> **Read this file in full before generating or modifying any code in this module.**
 
 ## File Integrity — Read This First
 
@@ -29,402 +29,400 @@ Legitimate changes go through a pull request reviewed by the `platform-team` COD
 
 ## Module Overview
 
-**Module Name:** `tt-data-league-core-domain`  
-**Module Type:** Core Domain Module (Pure Domain Logic)  
-**Package Root:** `org.cttelsamicsterrassa.data.core.domain`  
-**Version:** 0.0.1-SNAPSHOT  
-**Java Target:** Java 21  
+**Artifact ID:** `tt-data-league-core-domain`  
+**Role:** Pure domain layer — business logic, contracts, and rules  
+**Java Version:** 21  
+**Key Dependency:** `commons-core` (base `Entity` class)
 
-This module contains the core domain models, repository interfaces, and domain services for the table tennis league data management system. It follows a domain-driven design (DDD) approach with clean separation of concerns.
+This module contains **zero persistence logic**. It defines the business vocabulary, enforces invariants, and declares repository contracts that infrastructure modules must fulfil. It is framework-agnostic except for lightweight Spring annotations used only on orchestration services (`@Service`).
 
 ---
 
-## Architecture & Design Patterns
+## Package Layout
 
-### Layer Structure
 ```
-domain/
-├── model/           # Domain entities and value objects
-├── repository/      # Repository interfaces (abstraction layer)
-└── service/         # Domain services and utilities
+src/main/java/.../domain/
+├── model/                   ← Domain entities, value objects, enums
+│   └── {subdomain}/         ← Sub-domain grouping when needed
+├── repository/              ← Repository interface contracts
+│   └── {subdomain}/         ← Sub-domain repository interfaces
+└── service/                 ← Domain services, validators, utilities
+    └── {subdomain}/         ← Sub-domain services and exceptions
+
+src/test/java/.../domain/
+├── model/                   ← Entity behaviour tests
+│   └── {subdomain}/
+└── service/                 ← Service logic tests
+    └── {subdomain}/
 ```
 
-### Design Principles
-- **Domain-Driven Design (DDD):** Domain models are pure Java objects without infrastructure dependencies
-- **Repository Pattern:** Abstracts data persistence (implementation in `tt-data-league-core-repository-jpa`)
-- **Entity-based Design:** Core domain uses entity objects extending the base `Entity` class from commons-core
-- **UUID as Identity:** All entities use UUID for unique identification
-- **Factory Pattern:** Static factory methods (`createNew`, `createExisting`) for entity instantiation
+### Sub-domain Grouping Rule
+
+When a cluster of types belongs to a clearly bounded concern (e.g., authentication, licensing), group them under a matching sub-package **in all three layers** (`model/{subdomain}/`, `repository/{subdomain}/`, `service/{subdomain}/`). Do **not** mix sub-domain types with root-level types.
 
 ---
 
-## Domain Models
+## Taxonomy of Domain Types
 
-### Core Entities
-
-#### 1. **Club** (`model/Club.java`)
-- **Purpose:** Represents a table tennis club
-- **Identity:** UUID-based
-- **Key Attributes:**
-  - `id`: UUID (unique identifier)
-  - `name`: String (club name, unique)
-  - `yearRanges`: List<String> (seasons in which club participates)
-- **Key Methods:**
-  - `modifyName(String)`: Update club name
-  - `addYearRange(String)`: Add a season year range
-  - `removeYearRange(String)`: Remove a season year range
-  - `addYearRanges(List<String>)`: Bulk add year ranges
-- **Factory Methods:**
-  - `createNew(String name)`: Create new club with random UUID
-  - `createExisting(UUID id, String name)`: Create from persisted data
-- **Extends:** `Entity` from commons-core
-
-#### 2. **Practicioner** (`model/Practicioner.java`)
-- **Purpose:** Represents a person participating in table tennis activities
-- **Identity:** UUID-based
-- **Key Attributes:**
-  - `id`: UUID
-  - `firstName`: String
-  - `secondName`: String
-  - `fullName`: String
-  - `birthDate`: Date
-- **Factory Methods:**
-  - `createNew(...)`: Create new practitioner
-  - `createExisting(...)`: Create from persisted data
-- **Extends:** `Entity` from commons-core
-
-#### 3. **ClubMember** (`model/ClubMember.java`)
-- **Purpose:** Represents the association between a Practicioner and a Club
-- **Identity:** UUID-based
-- **Key Attributes:**
-  - `id`: UUID
-  - `practicioner`: Practicioner reference
-  - `club`: Club reference
-  - `memberNumber`: String (optional)
-  - `entryDate`: Date
-- **Purpose:** Links practitioners to clubs with temporal information
-
-#### 4. **License** (`model/License.java`)
-- **Purpose:** Represents a table tennis license (Federation membership)
-- **Key Attributes:**
-  - License identifier/number
-  - License status
-  - Validity period information
-- **Use Case:** Track licensing status for season players
-
-#### 5. **SeasonPlayer** (`model/SeasonPlayer.java`)
-- **Purpose:** Represents a player registered for a specific season
-- **Identity:** UUID-based
-- **Key Attributes:**
-  - `id`: UUID
-  - `clubMember`: ClubMember reference
-  - `license`: License reference
-  - `yearRange`: String (e.g., "2023-2024")
-- **Key Methods:**
-  - Factory methods for creation
-- **Purpose:** Links club members to seasons with their license information
-
-#### 6. **SeasonPlayerResult** (`model/SeasonPlayerResult.java`)
-- **Purpose:** Records match results for a season player
-- **Key Attributes:**
-  - Player performance metrics
-  - Match outcomes
-  - Competition results
-- **Used For:** Tracking seasonal player performance
-
-#### 7. **CompetitionInfo** (`model/CompetitionInfo.java`)
-- **Purpose:** Contains competition metadata
-- **Key Attributes:**
-  - `competitionType()`: Type of competition (league, cup, etc.)
-  - `competitionCategory()`: Category/division
-  - `competitionGroup()`: Group classification
-- **Record Type:** Value object (record-based)
-
-#### 8. **MatchInfo** (`model/MatchInfo.java`)
-- **Purpose:** Represents a match event
-- **Key Attributes:**
-  - Match details and scheduling
-  - Team information
-  - Match status
-
-#### 9. **PlayersSingleMatch** (`model/PlayersSingleMatch.java`)
-- **Purpose:** Records individual player performance in a single match
-- **Key Attributes:**
-  - Player reference
-  - Match results
-  - Performance metrics
-- **Use Case:** Detailed match statistics per player
-
-#### 10. **TeamRole** (`model/TeamRole.java`)
-- **Purpose:** Defines roles within team context (e.g., player, captain, substitute)
-- **Value Object:** Role classification
+| Type | Base / Mechanism | Location | Identity |
+|------|-----------------|----------|----------|
+| **Root Entity** | extends `Entity` | `model/` | `final UUID id` |
+| **Dependent Entity** | plain class, no `Entity` base | `model/` | `final UUID id` |
+| **Value Object** | Java `record` | `model/` | structural equality |
+| **Enum** | Java `enum` with `String value` | `model/` | enum constant |
+| **Repository Interface** | plain Java interface | `repository/` | — |
+| **Orchestration Service** | class `@Service`, constructor-injected | `service/` | — |
+| **Utility / Builder** | class, no annotation, static methods | `service/` | — |
+| **Validator** | class, no annotation, instance methods | `service/` | — |
+| **Port Interface** | plain Java interface | `service/{subdomain}/` | — |
+| **Domain Exception** | extends `RuntimeException` | `service/{subdomain}/` | — |
 
 ---
 
-## Repository Interfaces
+## Naming Conventions
 
-Located in `repository/` package. These define contracts for data persistence without implementation details.
-
-### Key Repositories
-
-1. **ClubRepository**
-   - `findById(UUID)`: Find club by ID
-   - `findByName(String)`: Find club by name
-   - `findAll()`: Retrieve all clubs
-   - `save(Club)`: Persist club
-   - `update(Club)`: Update existing club
-   - `delete(UUID)`: Delete club
-
-2. **PracticionerRepository**
-   - `findById(UUID)`: Find practitioner
-   - `findAll()`: List all practitioners
-   - CRUD operations
-
-3. **ClubMemberRepository**
-   - `findById(UUID)`: Find club member
-   - `findByClubId(UUID)`: Find members of a club
-   - `findByPracticionerId(UUID)`: Find club memberships of a person
-   - CRUD operations
-
-4. **SeasonPlayerRepository**
-   - `findById(UUID)`: Find season player record
-   - `findByYearRange(String)`: Find players in a season
-   - `findByClubId(UUID)`: Find club players in season
-   - CRUD operations
-
-5. **SeasonPlayerResultRepository**
-   - `findById(UUID)`: Find result record
-   - `findBySeasonPlayer(UUID)`: Results for a player
-   - CRUD operations
-
-6. **PlayersSingleMatchRepository**
-   - `findById(UUID)`: Find match player record
-   - `findByMatch(UUID)`: Find all player records in match
-   - CRUD operations
+| Artefact | Pattern | Example |
+|----------|---------|---------|
+| Root / Dependent entity | `{ConceptName}` | `SeasonPlayer` |
+| Value object (record) | `{ConceptName}Info` / `{ConceptName}` | `CompetitionInfo`, `License` |
+| Repository interface | `{Entity}Repository` | `SeasonPlayerRepository` |
+| Orchestration service | `{Concept}Service` | `MatchQueryService` |
+| Validator class | `{Concept}Validator` | `UserValidator` |
+| Utility / key builder | `{Concept}{Action}` | `SeasonPlayerResultUniqueKeyBuilder` |
+| Port interface | `{Capability}` (noun / gerund) | `PasswordHasher` |
+| Port implementation (infra) | `{Algorithm}{Capability}` | `BcryptPasswordHasher` |
+| Domain exception | `{Context}Exception` | `UserAlreadyExistsException` |
+| Test class | `{ClassUnderTest}Test` | `AuthenticationServiceTest` |
+| Test method | `{methodName}{ScenarioDescription}` | `registerUserRejectsDuplicateUsername` |
 
 ---
 
-## Domain Services
+## Entity Design Rules
 
-Located in `service/` package. These contain domain logic that spans multiple entities.
+### Constructor & Factory Methods
 
-### 1. **SeasonPlayerResultUniqueKeyBuilder** (`service/SeasonPlayerResultUniqueKeyBuilder.java`)
-- **Purpose:** Generates unique keys for season player results
-- **Method:** `buildUniqueKey(SeasonPlayer, CompetitionInfo, int, String)`
-- **Format:** `yearRange-competitionType-competitionCategory-matchDayNumber-competitionGroup-license-matchPlayerLetter`
-- **Use Case:** Uniquely identify player results across matches and competitions
-- **Example:** `2023-2024-LEAGUE-MALE-15-GROUPA-123456-A`
+- The constructor is **always `private`**.
+- Two static factory methods must be provided:
+  - `createNew(...)` — omits `UUID id`; generates `UUID.randomUUID()` internally.
+  - `createExisting(UUID id, ...)` — accepts all fields; used when reconstructing from persistence.
+- No public constructor is ever exposed.
 
-### 2. **SeasonRangeValidator** (`service/SeasonRangeValidator.java`)
-- **Purpose:** Validates season year range format and logic
-- **Validations:** Format compliance, logical date ranges
-- **Use Case:** Ensure consistency of season identifiers
-
----
-
-## Dependencies
-
-### Internal Dependencies
-- **commons-core** (org.albertsanso:commons-core:0.0.1-SNAPSHOT)
-  - Provides base `Entity` class
-  - Common utilities and abstractions
-  - Referenced classes: `Entity`, base model utilities
-
-### External Dependencies
-- **Spring Boot Starter** (org.springframework.boot:spring-boot-starter)
-  - Version: 3.5.8 (managed by parent POM)
-  - Provides dependency injection and framework support
-  - **Note:** Domain module has minimal Spring dependencies by design
-  - Repository interfaces are annotated for Spring integration but don't require Spring runtime
-
----
-
-## Key Concepts for Agentic Development
-
-### 1. Entity Creation Patterns
-Always use factory methods when creating domain entities:
 ```java
-// New entity with generated UUID
-Club club = Club.createNew("Club Name");
+// Canonical factory structure
+public static ConceptName createNew(/* business fields */) {
+    return new ConceptName(UUID.randomUUID(), /* fields */);
+}
 
-// Existing entity (from database)
-Club club = Club.createExisting(id, "Club Name");
+public static ConceptName createExisting(UUID id, /* business fields */) {
+    return new ConceptName(id, /* fields */);
+}
 ```
 
-### 2. Repository Abstraction
-- Repository interfaces define data contracts
-- **DO NOT** add persistence logic to domain models
-- Repository implementations are in `tt-data-league-core-repository-jpa` module
-- Repositories are dependencies injected into services
+### Identity Field
 
-### 3. Domain Services
-- Encapsulate cross-cutting domain logic
-- Operate on domain entities
-- Stateless by design
-- Used by application services (outside this module)
+- `private final UUID id` — always `final`, set once in the constructor.
+- Getter: `public UUID getId()`.
 
-### 4. UUID as Identity
-- All entities use `java.util.UUID` for identity
-- Always generate new UUIDs for new entities: `UUID.randomUUID()`
-- Persist UUIDs as VARCHAR in database
+### Mutability Policy
 
-### 5. Validation Points
-- **SeasonPlayerResultUniqueKeyBuilder:** Use to generate consistent unique identifiers
-- **SeasonRangeValidator:** Validate year range formats before persistence
-- **Repository methods:** Implement uniqueness constraints (e.g., Club.name is unique)
+- **No setters**. State changes happen through **command methods** with business-meaningful names.
+- Command method names describe the **business action**, not the field being changed:
+  - ✅ `modifyName(String newName)`, `disable()`, `enable()`, `addYearRange(String range)`, `clearYearRanges()`
+  - ❌ `setName(...)`, `setActive(...)`
+- Command methods enforce business rules inline (e.g., duplicate-prevention check before adding to a list).
 
----
+### Collection Fields
 
-## Common Development Tasks
+- Initialised inline (e.g., `new ArrayList<>()`).
+- Getter returns a **defensive unmodifiable view**: `Collections.unmodifiableList(list)`.
+- Mutation goes through dedicated command methods (`add*`, `remove*`, `clear*`, `updateAll*`).
+- Duplicate prevention: check with `contains(...)` before adding.
 
-### Adding a New Domain Entity
-1. Create entity class in `model/` extending `Entity`
-2. Implement factory methods (`createNew`, `createExisting`)
-3. Use UUID for identity with `java.util.UUID`
-4. Add domain logic methods (avoid setters; use intent-revealing commands)
-5. Create corresponding repository interface in `repository/`
+### `extends Entity` Usage
 
-### Adding Domain Logic
-1. If logic spans multiple entities → Create domain service in `service/`
-2. If logic is single-entity → Add to entity class itself
-3. Keep services stateless
-4. Use descriptive method names that reveal intent
+- Use `extends Entity` from `commons-core` for **root entities** and **aggregate-associated entities** that carry independent domain identity.
+- Plain classes without the base class are acceptable for **dependent entities** that are always accessed through an aggregate root.
 
-### Working with Repositories
-- Repository interfaces are contracts only
-- Implementations are in `tt-data-league-core-repository-jpa`
-- Use `Optional<T>` for nullable results
-- List-based queries should return `List<T>`
+### `toString()` Override
+
+- Provide a `toString()` in entities that need to be loggable or debuggable.
+- Format: `"ClassName{field=value, ...}"`.
 
 ---
 
-## Testing Considerations
+## Value Object Rules (Records)
 
-### Unit Testing
-- Test domain entities for invariant enforcement
-- Test factory methods for correct initialization
-- Test domain services independently with mock repositories
-- No database dependencies in unit tests
+- Use Java `record` for any concept that has **no identity** and is equal by value.
+- Records are immutable by nature; no additional defensive copying needed except when a full object copy is semantically required — provide a `createCopy()` method in that case.
+- Record field names use camelCase (`competitionType`, `matchDayNumber`).
 
-### Integration Testing
-- Test repository contracts with actual database
-- Located in `tt-data-league-core-repository-jpa` module
-- Use Spring Boot test context for full integration
-
-### Mocking Strategy
-- Mock repositories in domain service tests
-- Use factory methods to create test entities
-- Don't rely on persistence in unit tests
-
----
-
-## Extension Points
-
-### Future Enhancements
-1. **Event Sourcing:** Add domain events to track entity changes
-2. **Aggregate Patterns:** Group related entities into aggregates (e.g., Club + ClubMembers)
-3. **Value Objects:** Create value objects for common concepts (e.g., PlayerName, DateRange)
-4. **Specifications:** Complex query logic for repositories
-5. **Validation Rules:** Centralized validation for domain constraints
-
-### Related Modules
-- **tt-data-league-core-repository-jpa:** JPA implementation of repositories
-- **commons-core:** Shared base classes and utilities
-- Consumer modules will depend on this domain module
-
----
-
-## Guidelines for Agentic Development
-
-### ✅ DO's
-- Keep domain models clean and focused on business logic
-- Use intent-revealing names for methods
-- Leverage factory methods for entity creation
-- Delegate persistence to repositories
-- Write domain services for cross-entity logic
-- Use UUID for all entity identities
-- Document complex business rules in code
-
-### ❌ DON'Ts
-- Don't add Spring annotations to domain entities (except base class)
-- Don't mix persistence logic with domain logic
-- Don't use setters; use command methods instead
-- Don't add database-specific logic to models
-- Don't create circular dependencies between models
-- Don't make repositories concrete in this module
-
----
-
-## File Organization Reference
-
-```
-src/main/java/org/cttelsamicsterrassa/data/core/domain/
-├── model/
-│   ├── Club.java
-│   ├── Practicioner.java
-│   ├── ClubMember.java
-│   ├── License.java
-│   ├── SeasonPlayer.java
-│   ├── SeasonPlayerResult.java
-│   ├── CompetitionInfo.java
-│   ├── MatchInfo.java
-│   ├── PlayersSingleMatch.java
-│   └── TeamRole.java
-├── repository/
-│   ├── ClubRepository.java
-│   ├── PracticionerRepository.java
-│   ├── ClubMemberRepository.java
-│   ├── SeasonPlayerRepository.java
-│   ├── SeasonPlayerResultRepository.java
-│   └── PlayersSingleMatchRepository.java
-└── service/
-    ├── SeasonPlayerResultUniqueKeyBuilder.java
-    └── SeasonRangeValidator.java
+```java
+public record ConceptInfo(String fieldA, String fieldB) {
+    // optional copy factory if callers need isolated copies
+    public ConceptInfo createCopy() {
+        return new ConceptInfo(this.fieldA, this.fieldB);
+    }
+}
 ```
 
 ---
 
-## Quick Reference: Key Classes and Their Roles
+## Enum Rules
 
-| Class | Role | Extends | Key Method |
-|-------|------|---------|-----------|
-| Club | Domain Entity | Entity | `modifyName()`, `addYearRange()` |
-| Practicioner | Domain Entity | Entity | `createNew(...)` |
-| ClubMember | Domain Entity | UUID-based | Links practitioner to club |
-| License | Value Object | - | License tracking |
-| SeasonPlayer | Domain Entity | UUID-based | Links member to season |
-| SeasonPlayerResult | Domain Entity | UUID-based | Performance tracking |
-| CompetitionInfo | Value Object/Record | - | Competition metadata |
-| ClubRepository | Interface | - | CRUD for Club |
-| SeasonPlayerResultUniqueKeyBuilder | Service | - | `buildUniqueKey()` |
+- Enums carry a `private final String value` field representing the serialised/external form.
+- Constructor: `EnumName(String value)`.
+- Accessor: `public String getValue()`.
+- Static factory: `public static EnumName fromValue(String value)` with:
+  - Null / blank guard → return a default `UNKNOWN` (or equivalent safe constant).
+  - Case-insensitive matching (`equalsIgnoreCase`).
+  - Fallback to `UNKNOWN` for unrecognised input.
 
 ---
 
-## Authentication Slice (FEAT-001)
+## Repository Interface Rules
 
-### New Packages
-- `model/auth`: `User` entity with UUID identity, email/username, bcrypt hash, created timestamp, active flag
-- `repository/auth`: `UserRepository` contract for lookup, uniqueness checks, persistence, and delete methods
-- `service/auth`: `AuthenticationService`, `PasswordHasher`, `BcryptPasswordHasher`, `UserValidator`, auth exceptions
-
-### Core Flow
-1. `AuthenticationService.registerUser(...)` validates input and uniqueness.
-2. Password is hashed through `PasswordHasher` (bcrypt implementation provided).
-3. Persisted through `UserRepository` (implemented in JPA module).
-4. `authenticateUser(...)` returns `Optional<User>` only for active users with matching hash.
-
-### Testing Surface
-- `UserTest`: entity creation, password verification/change, enable/disable lifecycle
-- `BcryptPasswordHasherTest`: salt/hash behavior and verification
-- `AuthenticationServiceTest`: registration and authentication behavior with mocked repository
-- `UserValidatorTest`: username/email/password validation rules
+- Plain Java interface — **no Spring annotations**, **no default implementations**.
+- Return types:
+  - Single result, may not exist → `Optional<T>`
+  - Multiple results → `List<T>`
+  - Existence check → `boolean`
+  - Void operations → `void`
+- Standard method signatures to include:
+  - `Optional<T> findById(UUID id)`
+  - `void save(T entity)` — handles both create and update
+  - `void deleteById(UUID id)`
+  - `boolean existsById(UUID id)`
+- Domain-specific query methods follow the naming pattern:
+  - `findBy{Criteria}(...)` — exact match
+  - `searchBySimilar{Field}(...)` — fuzzy / partial match
+  - `findBy{MultiField}And{MultiField}(...)` — composite key lookup
+- Never leak JPA or persistence-layer types through a repository interface.
 
 ---
 
-## Version Information
-- **Module Version:** 0.0.1-SNAPSHOT
-- **Java Version:** 21
-- **Build Tool:** Maven
-- **Spring Boot Version:** 3.5.8
-- **Last Updated:** 2026-03-24
+## Domain Service Rules
+
+### Orchestration Services (`@Service`)
+
+- Annotated with `@org.springframework.stereotype.Service`.
+- Dependencies injected **via constructor** (no field or setter injection).
+- Single-responsibility: one service per bounded orchestration concern.
+- Constant error messages declared as `private static final String {NAME}_MESSAGE`.
+- Guard clauses at method entry for null/blank validation; throw `IllegalArgumentException` for bad input.
+- Delegate cross-cutting concerns (hashing, validation) to injected ports or collaborators.
+
+```java
+@Service
+public class ConceptQueryService {
+
+    private static final String INVALID_INPUT_MESSAGE = "...";
+
+    private final ConceptRepository conceptRepository;
+
+    public ConceptQueryService(ConceptRepository conceptRepository) {
+        this.conceptRepository = conceptRepository;
+    }
+
+    public List<Concept> findByName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException(INVALID_INPUT_MESSAGE);
+        }
+        return conceptRepository.findBySimilarName(name);
+    }
+}
+```
+
+### Utility / Builder Classes
+
+- No Spring annotations.
+- Methods are `public static`.
+- No mutable state — pure functions.
+- Named clearly to reflect the single operation they perform.
+
+### Validator Classes
+
+- No Spring annotations; instantiated by callers.
+- Provide per-field `List<String> validate{Field}(...)` methods returning a list of error messages (empty = valid).
+- Provide an aggregate `void validateOrThrow(...)` method that collects all errors and throws a domain exception if the list is non-empty.
+- Regular expressions declared as `private static final Pattern` constants.
+
+---
+
+## Port / Adapter Pattern (Infrastructure Abstractions)
+
+- When a domain service needs a capability implemented by infrastructure (e.g., password hashing, token generation, clock), define a **port interface** inside the `service/{subdomain}/` package.
+- The interface stays in the domain module; its implementation lives in the infrastructure module.
+- Naming: the interface describes the capability (noun), the implementation prefixes the algorithm/technology.
+
+```
+service/auth/PasswordHasher.java        ← port interface (domain)
+# implemented in repository-jpa or another infra module:
+BcryptPasswordHasher.java               ← adapter (infrastructure)
+```
+
+---
+
+## Domain Exception Rules
+
+- All domain exceptions extend `RuntimeException` (unchecked).
+- Co-located in the **same sub-domain service package** as the service that throws them.
+- Two constructor patterns:
+  - Fixed-message exceptions: no-arg constructor calls `super("fixed message")`.
+  - Parameterised exceptions: single `String message` arg constructor.
+- Never wrap checked exceptions unless a meaningful domain message is added.
+
+```java
+// Fixed message
+public class InvalidOperationException extends RuntimeException {
+    public InvalidOperationException() {
+        super("Fixed domain-specific message");
+    }
+}
+
+// Parameterised message
+public class ConceptAlreadyExistsException extends RuntimeException {
+    public ConceptAlreadyExistsException(String message) {
+        super(message);
+    }
+}
+```
+
+---
+
+## Testing Rules
+
+### Framework & Setup
+
+- JUnit 5 (`@ExtendWith(MockitoExtension.class)`) for all unit tests.
+- Mockito for repository and collaborator mocks.
+- **Preferred pattern:** `@Mock` + explicit instantiation in `@BeforeEach` (allows full control over constructor arguments, e.g., passing real validators).
+- `@InjectMocks` is acceptable when all dependencies are mocks.
+
+### Test Method Naming
+
+```
+{methodUnderTest}{BehaviourUnderTest}
+```
+
+Examples:
+- `findMatchesByPracticionerNameReturnsRepositoryResultsForValidInput`
+- `registerUserRejectsDuplicateUsername`
+- `authenticateUserReturnsEmptyWhenPasswordIsInvalid`
+
+No underscores. No `should` prefix. Pure descriptive camelCase.
+
+### Assertion Style
+
+- Use `assertEquals`, `assertTrue`, `assertFalse`, `assertNotNull`, `assertNotEquals`, `assertIterableEquals` from JUnit 5.
+- Use `assertThrows(ExceptionType.class, () -> ...)` for exception scenarios, followed by an `assertEquals` on the message when the message content is part of the contract.
+- Use `verify(mock).method(...)` to assert interactions.
+- Use `verifyNoInteractions(mock)` to assert that no side effects occurred.
+
+### Coverage Expectations
+
+| Scenario category | Must be covered |
+|-------------------|----------------|
+| Happy path | ✅ |
+| Invalid / null / blank input | ✅ |
+| Not found → empty Optional | ✅ |
+| Duplicate / conflict | ✅ |
+| State transitions (enable/disable) | ✅ |
+| Message content of thrown exceptions | ✅ when message is contractual |
+
+---
+
+## Adding a New Domain Type — Checklist
+
+### New Aggregate / Entity
+- [ ] Class in `model/` (or `model/{subdomain}/`)
+- [ ] `private final UUID id`
+- [ ] Private constructor
+- [ ] `createNew(...)` factory (UUID.randomUUID internally)
+- [ ] `createExisting(UUID id, ...)` factory
+- [ ] Command methods (no setters)
+- [ ] Defensive unmodifiable collection getters
+- [ ] `toString()` override
+- [ ] Unit tests for behaviour and factory methods
+
+### New Value Object
+- [ ] Java `record` in `model/`
+- [ ] `createCopy()` if callers need isolated copies
+- [ ] No identity field
+
+### New Enum
+- [ ] `private final String value` + constructor
+- [ ] `getValue()` accessor
+- [ ] `fromValue(String)` static factory with UNKNOWN fallback
+
+### New Repository Interface
+- [ ] Interface in `repository/` (or `repository/{subdomain}/`)
+- [ ] `findById`, `save`, `deleteById`, `existsById` as baseline
+- [ ] Domain-specific queries follow naming patterns above
+- [ ] No Spring / JPA imports
+
+### New Domain Service
+- [ ] Determine type: orchestration (`@Service`) vs. utility (static) vs. validator (instance)
+- [ ] Constructor injection for orchestration services
+- [ ] Constant error messages
+- [ ] Guard clauses for null/blank inputs
+- [ ] Co-located domain exceptions if needed
+- [ ] Unit tests covering happy path, invalid inputs, and exception scenarios
+
+### New Port Interface
+- [ ] Interface in `service/{subdomain}/`
+- [ ] Name describes capability only (no technology reference)
+- [ ] Implementation goes in the infrastructure module
+
+---
+
+## Anti-Patterns — Never Do These
+
+| Anti-pattern | Why forbidden |
+|---|---|
+| Public constructor on entity | Bypasses factory methods and identity generation |
+| Setter methods on entity fields | Breaks business-semantic mutation; allows invalid state |
+| JPA / Hibernate annotations in `model/` | Domain must be persistence-agnostic |
+| Spring `@Repository` / `@Transactional` in `repository/` interfaces | Infrastructure concerns belong in the JPA module |
+| Checked exceptions in domain services | Forces callers to handle infrastructure concerns |
+| Returning mutable collection from entity getter | Breaks encapsulation; allows external mutation |
+| Static state in orchestration services | Makes services non-thread-safe and untestable |
+| `@Autowired` field injection | Hides dependencies; breaks testability |
+
+---
+
+## Dependencies (domain module `pom.xml`)
+
+| Dependency | Purpose | Scope |
+|---|---|---|
+| `commons-core` | Base `Entity` class | compile |
+| `spring-boot-starter` | `@Service`, logging | compile |
+| `spring-security-crypto` | `BCryptPasswordEncoder` in port adapter | compile |
+| `junit-jupiter` | Unit testing | test |
+| `mockito-junit-jupiter` | Mocking in tests | test |
+
+> Add new dependencies to the **parent POM's `dependencyManagement`** first; reference them without a version in this module's `pom.xml`.
+
+---
+
+## Quick Reference
+
+```
+model/{Entity}.java                          → createNew / createExisting / command methods / getters
+model/{Entity}.java (record)                 → value object, structural equality
+model/{Entity}.java (enum)                   → fromValue / getValue / UNKNOWN fallback
+repository/{Entity}Repository.java           → findById / save / deleteById + domain queries
+service/{Concept}Service.java (@Service)     → orchestration, constructor injection, guard clauses
+service/{Concept}Validator.java              → validate{Field} / validateOrThrow
+service/{Concept}Builder.java                → static utility methods
+service/{subdomain}/{Capability}.java        → port interface
+service/{subdomain}/{Context}Exception.java  → unchecked domain exception
+```
+
+---
+
+## Last Updated
+
+**Date:** 2026-04-22  
+**Module Version:** 0.0.1-SNAPSHOT  
+**Status:** Active Development
 
