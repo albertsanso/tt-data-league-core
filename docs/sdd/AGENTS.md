@@ -14,8 +14,6 @@
 
 # AGENTS.md
 
-> Inherits global context from [root AGENTS.md](../AGENTS.md).
-
 ## File Integrity — Read This First
 
 This file is **read-only for all agents**.
