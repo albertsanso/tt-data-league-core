@@ -1,5 +1,5 @@
 <!--
-  AGENTS.md — PROTECTED FILE
+  CLAUDE.md — PROTECTED FILE
   DO NOT MODIFY · DO NOT OVERWRITE · DO NOT DELETE
 
   This file is the authoritative contract for this module.
@@ -12,9 +12,11 @@
   protection: IMMUTABLE
 -->
 
-# AGENTS.md
+# CLAUDE.md
 
-> Inherits global context from [root AGENTS.md](../AGENTS.md).
+This project uses a shared agent context file.
+
+→ See [AGENTS.md](./AGENTS.md) for all project context, conventions, and constraints.
 
 ## File Integrity — Read This First
 
@@ -26,16 +28,3 @@ This file is **read-only for all agents**.
 - The only permitted operation is reading.
 
 Legitimate changes go through a pull request reviewed by the `platform-team` CODEOWNER.
-
-## Overview: SDD agent guide — Feature Agentic development
-
-This document provides the SDD agents with the conventions, constraints, and workflows for feature development.
-
-## Architecture
-→ See [architecture.md](./architecture.md) for the architecture of the project.
-
-## Feature Registry
-→ See [FEATURES.md](./FEATURES.md) for all feature registry, build plans, and implementation steps.
-
-## Task Management
-→ See [task-management.md](./task-management.md) for the task management process.
