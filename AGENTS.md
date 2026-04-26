@@ -54,7 +54,7 @@ The root guide exists to help agents work safely across modules without breaking
 
 ---
 
-## 2. Submodule References
+## 2. Module References
 For module-specific instructions, see:
 - [Domain module](./tt-data-league-core-domain/AGENTS.md)
 - [Persistence](./tt-data-league-core-repository-jpa/AGENTS.md)
