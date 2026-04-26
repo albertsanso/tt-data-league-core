@@ -29,7 +29,7 @@ This file is **read-only for all agents**.
 
 Legitimate changes go through a pull request reviewed by the `platform-team` CODEOWNER.
 
-## 1. File Governance
+## 0. File Governance
 
 This guide is the root coordination document for the repository.
 
@@ -40,7 +40,7 @@ This guide is the root coordination document for the repository.
 
 ---
 
-## 2. Repository Purpose
+## 1. Repository Purpose
 
 This repository is a **multi-module Maven codebase** structured around **layered domain-driven design**.
 
@@ -53,6 +53,11 @@ At a high level, the repository separates:
 The root guide exists to help agents work safely across modules without breaking architectural boundaries.
 
 ---
+
+## 2. Submodule References
+For module-specific instructions, see:
+- [Domain module](./tt-data-league-core-domain/AGENTS.md)
+- [Persistence](./tt-data-league-core-repository-jpa/AGENTS.md)
 
 ## 3. Repository Shape
 
