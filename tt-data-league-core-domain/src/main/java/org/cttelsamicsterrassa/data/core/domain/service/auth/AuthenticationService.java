@@ -1,6 +1,10 @@
 package org.cttelsamicsterrassa.data.core.domain.service.auth;
 
+import org.cttelsamicsterrassa.data.core.domain.model.auth.PermissionAction;
+import org.cttelsamicsterrassa.data.core.domain.model.auth.Resource;
+import org.cttelsamicsterrassa.data.core.domain.model.auth.Role;
 import org.cttelsamicsterrassa.data.core.domain.model.auth.User;
+import org.cttelsamicsterrassa.data.core.domain.repository.auth.RoleRepository;
 import org.cttelsamicsterrassa.data.core.domain.repository.auth.UserRepository;
 
 import java.util.Optional;
@@ -9,11 +13,14 @@ import java.util.UUID;
 public class AuthenticationService {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final PasswordHasher passwordHasher;
     private final UserValidator userValidator;
 
-    public AuthenticationService(UserRepository userRepository, PasswordHasher passwordHasher, UserValidator userValidator) {
+    public AuthenticationService(UserRepository userRepository, RoleRepository roleRepository,
+                                  PasswordHasher passwordHasher, UserValidator userValidator) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
         this.passwordHasher = passwordHasher;
         this.userValidator = userValidator;
     }
@@ -37,6 +44,9 @@ public class AuthenticationService {
                 true
         );
 
+        roleRepository.findByName(RbacCatalog.defaultRoleName())
+                .ifPresent(user::assignRole);
+
         userRepository.save(user);
         return user;
     }
@@ -54,7 +64,16 @@ public class AuthenticationService {
         }
 
         boolean isValidPassword = passwordHasher.verify(plainPassword, user.getPasswordHash());
-        return isValidPassword ? Optional.of(user) : Optional.empty();
+        if (!isValidPassword) {
+            return Optional.empty();
+        }
+
+        if (user.getRoles().isEmpty()) {
+            roleRepository.findByName(RbacCatalog.defaultRoleName())
+                    .ifPresent(role -> user.assignRole(role));
+        }
+
+        return Optional.of(user);
     }
 
     public Optional<User> getUserByUsername(String username) {
@@ -96,6 +115,25 @@ public class AuthenticationService {
                 user.isActive()
         ));
     }
+
+    public void assignRole(UUID userId, String roleName) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(InvalidCredentialsException::new);
+        Role role = roleRepository.findByName(roleName)
+                .orElseThrow(() -> new IllegalArgumentException("Role not found: " + roleName));
+        user.assignRole(role);
+        userRepository.save(user);
+    }
+
+    public boolean userHasPermission(UUID userId, Resource resource, PermissionAction action) {
+        return userRepository.findById(userId)
+                .map(user -> user.hasPermission(resource, action))
+                .orElse(false);
+    }
+
+    public void assertAuthorized(UUID userId, Resource resource, PermissionAction action) {
+        if (!userHasPermission(userId, resource, action)) {
+            throw new AuthorizationException("User does not have permission: " + action + " on " + resource);
+        }
+    }
 }
-
-

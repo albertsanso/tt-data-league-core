@@ -15,7 +15,6 @@ import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -25,13 +24,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Entity
 @Table(
-        name = "AppUser",
+        name = "AppRole",
         indexes = {
-                @Index(name = "idx_user_username", columnList = "username", unique = true),
-                @Index(name = "idx_user_email", columnList = "email", unique = true)
+                @Index(name = "idx_role_name", columnList = "name", unique = true)
         }
 )
-public class UserJPA {
+public class RoleJPA {
 
     @Id
     @Column(updatable = false, nullable = false)
@@ -39,25 +37,14 @@ public class UserJPA {
     private UUID id;
 
     @Column(nullable = false, unique = true)
-    private String username;
-
-    @Column(nullable = false, unique = true)
-    private String email;
-
-    @Column(name = "password_hash", nullable = false)
-    private String passwordHash;
-
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "is_active", nullable = false)
-    private boolean active;
+    private String name;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "AppUser_Role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
+            name = "AppRole_Permission",
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "permission_id")
     )
-    private Set<RoleJPA> roles = new HashSet<>();
+    private Set<PermissionJPA> permissions = new HashSet<>();
 }
+
